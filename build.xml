@@ -1,5 +1,5 @@
 
-<project name="Chess		" default="help" basedir=".">
+<project name="Chess" default="help" basedir=".">
 
    <property name="build-directory" value="build"/>
    <property name="source-directory" value="src"/>
@@ -40,6 +40,15 @@
       </java>
    </target>
 
+   <delete file="chess.jar"/>
+   
+   <jar jarfile="chess.jar" basedir=".">
+	   <manifest>
+		  <attribute name="Main-Class"
+				value="ChessDriver"/>
+		</manifest>
+   </jar>
+	
    
 
 </project>
