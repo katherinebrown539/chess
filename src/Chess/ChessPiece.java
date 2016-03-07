@@ -7,6 +7,9 @@ import java.util.Iterator;
 public abstract class ChessPiece extends JButton
 {
 	
+	//TODO
+	//add blackPieceOnSquare and whitePieceOnSquare methods
+	
 	protected int score; //piece's value when captured
 	protected int x_mov; //how many spaces on x axis piece can move
 	protected int y_mov; //how many spaces on y axis piece can move
@@ -17,6 +20,7 @@ public abstract class ChessPiece extends JButton
 	protected boolean can_capture; //can the piece capture anything?
 	protected boolean is_selected; //is piece selected by player
 	protected SquareCenter loc; //current location of piece
+	
 	protected ArrayList<SquareCenter> moves; //possible legal moves for piece
 	protected Font font = new Font("Impact", Font.BOLD, 72);
 	protected Color highlight = new Color(0, 102, 204);
@@ -25,9 +29,43 @@ public abstract class ChessPiece extends JButton
 	//protected Image piece;
 	protected String piece_id;
 	protected String piece_name;
+	protected String piece_loc;
 	
-	public void highlightMoves(){ return; }
+	public void highlightMoves()
+	{
+		if(!is_selected) return;
+		
+		for(SquareCenter m : moves)
+		{
+			m.setID(board.getIDFromLocation(m));
+			//board.setHighlightXY(m.getX(), m.getY());
+			board.highlightSquare(m.getX(), m.getY());
+			System.out.println(m);
+		}
+	}
+	public void deselectMoves()
+	{
+		if(!is_selected) return;
+		
+		for(SquareCenter m : moves)
+		{
+			
+			board.clearSquare(m.getX(), m.getY());
+			//System.out.println(m);
+		}
+		
+		//repaint();
+		
+	}
 	public abstract void updatePossibleMoves();
+	
+	public void setStringLocation(SquareCenter loc)
+	{
+		String id = board.getIDFromLocation(loc);
+		
+		loc.setID(id);
+	}
+	
 	public void move(SquareCenter end)
 	{
 		Iterator<SquareCenter> iter = moves.iterator();
@@ -71,8 +109,9 @@ public abstract class ChessPiece extends JButton
 		piece_id = id;
 		piece_name = name;
 		moves = new ArrayList<SquareCenter>();
+		//updatePossibleMoves();
 		this.addActionListener(new PieceListener());
-		
+		System.out.println(name);
 	}
 	public SquareCenter getCenterLocation(){return loc;}
 	public boolean isSelected()
@@ -107,15 +146,27 @@ public abstract class ChessPiece extends JButton
 				
 			if(!is_selected)
 			{
+				moves = new ArrayList<SquareCenter>();
 				if(board.isAnyPieceSelected()) board.setAllPiecesUnselected();
+				board.deselectAllSquares();
 				is_selected = true;
+				updatePossibleMoves();
+				highlightMoves();
+				repaint();
+				System.out.println(piece_name + " at " + loc.toString() + " selected");
+				
 			}
 			else
 			{
+				moves = new ArrayList<SquareCenter>();
+				deselectMoves();
+				repaint();
+				System.out.println(piece_name + " at " + loc.toString() + " deselected");
 				is_selected = false;
 			}
-			System.out.println(piece_name + " at " + loc.toString() + " selected");
-			repaint();
+			
+			
+			//repaint();
 		}
 	}
 	

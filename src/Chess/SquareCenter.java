@@ -14,6 +14,7 @@ public class SquareCenter
 	
 	public int getX(){return x;}
 	public int getY(){return y;}
+	public void setID(String id){this.id = id;}
 	public String getID(){return id;}
 	public String toString(){return id;}
 }
