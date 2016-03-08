@@ -126,36 +126,63 @@ public class ChessBoard extends JPanel implements MouseListener
 		{
 			clearSquare(c.getX(), c.getY());
 		}
-		clearSquare(last_x, last_y);
-		//high_x = 0; 
-		//high_y = 0;
-		repaint();
 	}
 	public ArrayList<SquareCenter> getCenters(){ return centers; }
+	public void printSelectedCenters()
+	{
+		for(SquareCenter c: centers)
+		{
+			if(c.isSelected()) System.out.println(c);
+		}
+		System.out.println("---------------");
+	}
+	public void paintSelectedCenters(Graphics g)
+	{
+		for(SquareCenter c: centers)
+		{
+			g.setColor(highlight);
+			if(c.isSelected()){ g.drawRect(c.getX() - square_size/2, c.getY()-square_size/2, square_size, square_size);}
+			
+		}
+		
+	}
 	public boolean isAnyPieceSelected()
 	{
 		for(ChessPiece p:pieces)
 		{
 			if(p.isSelected()) return true;
 		}
-		return false;
+		return false;	
 	}
+	
 	public void setAllPiecesUnselected()
 	{
 		for(ChessPiece p : pieces)
 		{
+			//if(p.isSelected()) break; //maintain the selection
 			p.setSelected(false);
 		}
 	}
+	public void setAllSquaresUnselected()
+	{
+		for(SquareCenter c: centers)
+		{
+			c.setSelected(false);
+		}
+	}
+	public void setAllUnselected()
+	{
+		setAllSquaresUnselected();
+		setAllPiecesUnselected();
+		repaint();
+	}
 	public void mouseClicked(MouseEvent e)
 	{
-		////System.out.println(e.getX() + " " + e.getY());
+		//deselectAllSquares();
 		//where was the mouse clicked?
 		int x = e.getX(); 
 		int y = e.getY();
-		//System.out.println(x + " , " + y);
-		
-		
+	
 		//go through each center, and if it's center is in between a square's boundaries and not a button, fill it out
 		Iterator<SquareCenter> iter = centers.iterator();
 		while(iter.hasNext())
@@ -168,41 +195,28 @@ public class ChessBoard extends JPanel implements MouseListener
 			int square_y_end = center.getY() + (square_size/2);
 			
 			
-			
 			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
 			{
-				//a mouse click is in some boundaries		
-
-				
-				//clear out highlight moves
-				
-				if(anyPieceOnSquare(center.getX(), center.getY()) != null) return; //let the button stuff take care of this.
-				
-				//System.out.println(center);
-				
-				last_x = high_x;
-				last_y = high_y;
-				
-				high_x = center.getX();
-				high_y = center.getY();
-				
-				repaint();
-				
-				return;
+				if(center.isSelected()) {center.setSelected(false);}
+				else center.setSelected(true);			
 			}	
+			else{
+				if(center.isSelected()){center.setSelected(false);}
+			}
+			repaint();
+			
 		}
 
 			
 			
 	}
 	
-	public SquareCenter putInCorrectCenter(SquareCenter c)
-	{return null;}
 	
 	public void paint(Graphics g)
 	{
-		deselectAllSquares();
+		
 		this.g = g;
+		//printSelectedCenters();
 		int start_x = Math.abs(height-width)/2 - 10;
 		int start_y = Math.abs(height-width)/2 - 10;
 		
@@ -218,10 +232,13 @@ public class ChessBoard extends JPanel implements MouseListener
 			SquareCenter loc = centers.get(j);
 			g.setColor(curr);
 			g.fillRect(loc.getX() - square_size/2, loc.getY() -square_size/2, square_size, square_size);
+			g.setColor(highlight);
 			
-			if(j != col*(8)-1) curr = (curr==light)?dark:light;
+			if(j != col*(8)-1) curr = (curr==light)?dark:light; 
 			else col++;
 		}
+		
+		paintSelectedCenters(g);
 		
 		//Paint each piece 
 		boolean trigger = false;
@@ -230,23 +247,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		{
 			ChessPiece cp = piece_iter.next();
 			cp.draw(g);
-			if(cp.isSelected()){trigger = true;}
 		} 
-		
-		//paint the selected square
-		g.setColor(highlight);
-		 highlightSquare(high_x, high_y, g);
-		 clearSquare(last_x, last_y, g);
-		
-		
-
-		for(SquareCenter c : highlight_locs)
-		{
-			//System.out.println(c);
-			//g.drawRect(c.getX() - square_size/2, c.getY() - square_size/2, square_size, square_size);
-			highlightSquare(c.getX(), c.getY(), g);
-			//highlightSquareWithPiece(c.getX(), c.getY()); 	
-		}
 		
 		
 	}
@@ -265,10 +266,15 @@ public class ChessBoard extends JPanel implements MouseListener
 		return null;
 	}
 
-	public void clearSquare(int center_x, int center_y)
+	public void clearSquare(int x, int  y)
 	{
-		this.setBorder(new EmptyBorder(center_x+(square_size/2),center_x-(square_size/2),center_y+(square_size/2),center_y-(square_size/2)));
-		
+		for(SquareCenter c: centers)
+		{
+			if(c.getX() == x && c.getY() == y)
+			{
+				c.setSelected(false);
+			}
+		}
 	}
 	
 	public void clearSquare(int center_x, int center_y, Graphics g)
@@ -296,8 +302,6 @@ public class ChessBoard extends JPanel implements MouseListener
 	
 	public ChessPiece anyPieceOnSquare(int x, int y)
 	{
-		
-		
 		Iterator<ChessPiece> iter = pieces.iterator();
 		while(iter.hasNext())
 		{
@@ -308,11 +312,15 @@ public class ChessBoard extends JPanel implements MouseListener
 		return null;
 	}
 	
-	public void highlightSquare(int x, int y)
+	public void highlightSquare(int ix, int iy)
 	{
-		SquareCenter s = new SquareCenter(x,y,null);
-		s.setID(getIDFromLocation(s));
-		highlight_locs.add(s);
+		for(SquareCenter c: centers)
+		{
+			if(c.getX() == ix && c.getY() == iy)
+			{
+				c.setSelected(true);
+			}
+		}
 	}
 	
 	public void highlightSquare(int center_x, int center_y, Graphics g)

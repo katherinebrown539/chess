@@ -7,9 +7,6 @@ import java.util.Iterator;
 public abstract class ChessPiece extends JButton
 {
 	
-	//TODO
-	//add blackPieceOnSquare and whitePieceOnSquare methods
-	
 	protected int score; //piece's value when captured
 	protected int x_mov; //how many spaces on x axis piece can move
 	protected int y_mov; //how many spaces on y axis piece can move
@@ -33,15 +30,13 @@ public abstract class ChessPiece extends JButton
 	
 	public void highlightMoves()
 	{
-		if(!is_selected) return;
-		
 		for(SquareCenter m : moves)
 		{
 			m.setID(board.getIDFromLocation(m));
-			//board.setHighlightXY(m.getX(), m.getY());
 			board.highlightSquare(m.getX(), m.getY());
-			System.out.println(m);
 		}
+		
+		repaint();
 	}
 	public void deselectMoves()
 	{
@@ -49,9 +44,7 @@ public abstract class ChessPiece extends JButton
 		
 		for(SquareCenter m : moves)
 		{
-			
 			board.clearSquare(m.getX(), m.getY());
-			//System.out.println(m);
 		}
 		
 		//repaint();
@@ -111,7 +104,7 @@ public abstract class ChessPiece extends JButton
 		moves = new ArrayList<SquareCenter>();
 		//updatePossibleMoves();
 		this.addActionListener(new PieceListener());
-		System.out.println(name);
+		//System.out.println(name);
 	}
 	public SquareCenter getCenterLocation(){return loc;}
 	public boolean isSelected()
@@ -126,15 +119,12 @@ public abstract class ChessPiece extends JButton
 	
 	public void draw(Graphics g)
 	{
-		//System.out.println("piece paint");
-		//board.draw(g);
-		if(!in_play) return;
+		if(!in_play) return; //don't draw a captured piece
+		
 		if(is_selected)g.setColor(highlight);
 		else g.setColor(piece_color);
-		//System.out.println(is_selected);
 		
 		g.setFont(font);
-		//g.setColor(new Color(0,0,0));	
 		g.drawString(piece_id, loc.getX() - 20, loc.getY() + 20);
 		
 	}
@@ -143,27 +133,25 @@ public abstract class ChessPiece extends JButton
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-				
+			
+			moves = new ArrayList<SquareCenter>();
 			if(!is_selected)
 			{
-				moves = new ArrayList<SquareCenter>();
-				if(board.isAnyPieceSelected()) board.setAllPiecesUnselected();
-				board.deselectAllSquares();
+				board.setAllUnselected();
 				is_selected = true;
 				updatePossibleMoves();
 				highlightMoves();
-				repaint();
 				System.out.println(piece_name + " at " + loc.toString() + " selected");
-				
+				repaint();
 			}
 			else
 			{
-				moves = new ArrayList<SquareCenter>();
-				deselectMoves();
-				repaint();
+				board.setAllUnselected();
 				System.out.println(piece_name + " at " + loc.toString() + " deselected");
 				is_selected = false;
+				repaint();
 			}
+			
 			
 			
 			//repaint();
