@@ -37,7 +37,7 @@ public class WhitePawn extends Pawn
 		
 
 		ChessPiece piece = board.anyPieceOnSquare(loc.getX() - square_size, loc.getY() - square_size);
-		can_capture = (piece != null)&&(piece instanceof BlackPawn);
+		can_capture = (piece != null)&&(board.blackPieceOnSquare(new_x,new_y));
 		if(can_capture) //need to check black piece 
 		{
 			SquareCenter n = new SquareCenter(loc.getX() - square_size, loc.getY() - square_size, null);
@@ -46,7 +46,7 @@ public class WhitePawn extends Pawn
 			
 		}
 		piece = board.anyPieceOnSquare(loc.getX() + square_size, loc.getY() - square_size);
-		can_capture = (piece != null)&&(piece instanceof BlackPawn);
+		can_capture = (piece != null)&&(board.blackPieceOnSquare(new_x,new_y));
 		if(can_capture) //need to check black piece	
 		{
 			SquareCenter n = new SquareCenter(loc.getX() + square_size, loc.getY() - square_size, null);

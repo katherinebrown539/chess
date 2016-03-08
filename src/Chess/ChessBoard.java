@@ -1,25 +1,23 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.filechooser.*;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.IOException;
-import java.text.*;
-import java.util.Date;
 import java.awt.Graphics;
 import java.lang.Math;
 import java.util.Iterator;
 import javax.swing.border.EmptyBorder;
+
 public class ChessBoard extends JPanel implements MouseListener
 {
 	private Graphics g;
 	private int board_size;
 	private int height;
 	private int width;
+	//selects a single square
 	private int high_x;
 	private int high_y;
-	protected ArrayList<SquareCenter> highlight_locs;
+	private ArrayList<SquareCenter> highlight_locs;
+	private ArrayList<SquareCenter> deselect_locs;
 	private int last_x;
 	private int last_y;
 	private int square_size;
@@ -29,15 +27,26 @@ public class ChessBoard extends JPanel implements MouseListener
 	private ArrayList<SquareCenter> centers;
 	private ArrayList<ChessPiece> pieces; //list of pieces to draw
 	
-	public void setHighlightXY(int x, int y)
+	public boolean whitePieceOnSquare(int x, int y)
 	{
-		//high_x = 0;// x-square_size/2;
-		//high_y = 0;//y-square_size/2;
-		SquareCenter a = new SquareCenter(x-square_size/2, y-square_size/2, null);
-		a.setID(getIDFromLocation(a));
-		highlight_locs.add(a);
-	}
+		ChessPiece piece = anyPieceOnSquare(x,y);
+		if(piece == null){ return false; } 
+		
+		if(piece instanceof WhitePawn || piece instanceof WhiteRook || piece instanceof WhiteKnight || piece instanceof WhiteBishop || piece instanceof WhiteQueen)
+		{return true;}
 	
+		return false;
+	}
+	public boolean blackPieceOnSquare(int x, int y)
+	{
+		ChessPiece piece = anyPieceOnSquare(x,y);
+		if(piece == null){ return false; } 
+		
+		if(piece instanceof BlackPawn || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackQueen)
+		{return true;}
+	
+		return false;
+	}
 	public void printCenters()
 	{
 		for(SquareCenter sc : centers)
@@ -70,6 +79,7 @@ public class ChessBoard extends JPanel implements MouseListener
 	{
 		return centers.get(getIndexFromID(id));
 	}
+	
 	public int getIndexFromID(String id)
 	{
 		int letter = (int)id.charAt(0)-65;
@@ -116,8 +126,9 @@ public class ChessBoard extends JPanel implements MouseListener
 		{
 			clearSquare(c.getX(), c.getY());
 		}
-		high_x = 0; 
-		high_y = 0;
+		clearSquare(last_x, last_y);
+		//high_x = 0; 
+		//high_y = 0;
 		repaint();
 	}
 	public ArrayList<SquareCenter> getCenters(){ return centers; }
@@ -142,17 +153,10 @@ public class ChessBoard extends JPanel implements MouseListener
 		//where was the mouse clicked?
 		int x = e.getX(); 
 		int y = e.getY();
-		System.out.println(x + " , " + y);
+		//System.out.println(x + " , " + y);
 		
-		//cancel out selection of multiple pieces
-		int count= 0;
-		for(ChessPiece p:pieces)
-		{
-			if(p.isSelected()) count++;
-			if(count >= 2) setAllPiecesUnselected();
-		}
 		
-		//go through each center, and if it's center is inbetween a square's boundaries, fill it out
+		//go through each center, and if it's center is in between a square's boundaries and not a button, fill it out
 		Iterator<SquareCenter> iter = centers.iterator();
 		while(iter.hasNext())
 		{
@@ -164,31 +168,24 @@ public class ChessBoard extends JPanel implements MouseListener
 			int square_y_end = center.getY() + (square_size/2);
 			
 			
+			
 			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
 			{
 				//a mouse click is in some boundaries		
+
+				
+				//clear out highlight moves
+				
+				if(anyPieceOnSquare(center.getX(), center.getY()) != null) return; //let the button stuff take care of this.
+				
 				//System.out.println(center);
-				//System.out.println(center);
+				
 				last_x = high_x;
 				last_y = high_y;
-			
-				//deselect all buttons
-				for(ChessPiece p:pieces)
-				{
-					p.setSelected(false);
-				}
-				if((square_x_start == high_x && square_y_start == high_y))
-				{
-					//same square, so deselect it
-					high_x = 0;
-					high_y = 0;
-				}
-				else
-				{
-					
-					high_x = square_x_start;
-					high_y = square_y_start;
-				}
+				
+				high_x = center.getX();
+				high_y = center.getY();
+				
 				repaint();
 				
 				return;
@@ -226,9 +223,9 @@ public class ChessBoard extends JPanel implements MouseListener
 			else col++;
 		}
 		
+		//Paint each piece 
 		boolean trigger = false;
 		Iterator<ChessPiece> piece_iter = pieces.iterator();
-		//System.out.println(pieces.size());
 		while(piece_iter.hasNext())
 		{
 			ChessPiece cp = piece_iter.next();
@@ -236,16 +233,22 @@ public class ChessBoard extends JPanel implements MouseListener
 			if(cp.isSelected()){trigger = true;}
 		} 
 		
+		//paint the selected square
 		g.setColor(highlight);
-		if(!trigger) highlightSquare(high_x, high_y, g);
-		else clearSquare(last_x, last_y, g);
+		 highlightSquare(high_x, high_y, g);
+		 clearSquare(last_x, last_y, g);
 		
+		
+
 		for(SquareCenter c : highlight_locs)
 		{
 			//System.out.println(c);
-			g.drawRect(c.getX() - square_size/2, c.getY() - square_size/2, square_size, square_size);
+			//g.drawRect(c.getX() - square_size/2, c.getY() - square_size/2, square_size, square_size);
+			highlightSquare(c.getX(), c.getY(), g);
 			//highlightSquareWithPiece(c.getX(), c.getY()); 	
 		}
+		
+		
 	}
 	
 	public String getIDFromLocation(SquareCenter c)
@@ -261,12 +264,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		
 		return null;
 	}
-	public void mouseEntered(MouseEvent e){};
-	public void mouseExited(MouseEvent e){};
-	public void mousePressed(MouseEvent e){};
-	public void mouseReleased(MouseEvent e){};
-	
-	
+
 	public void clearSquare(int center_x, int center_y)
 	{
 		this.setBorder(new EmptyBorder(center_x+(square_size/2),center_x-(square_size/2),center_y+(square_size/2),center_y-(square_size/2)));
@@ -323,9 +321,13 @@ public class ChessBoard extends JPanel implements MouseListener
 		Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(10));
 
-		if(center_x > 100 && center_y > 100) g.drawRect(high_x, high_y, square_size, square_size);
+		if(center_x > 100 && center_y > 100) g.drawRect(center_x - square_size/2, center_y-square_size/2, square_size, square_size);
 		//return false;
 	}
 	
 
+	public void mouseEntered(MouseEvent e){};
+	public void mouseExited(MouseEvent e){};
+	public void mousePressed(MouseEvent e){};
+	public void mouseReleased(MouseEvent e){};
 }

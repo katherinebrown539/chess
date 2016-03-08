@@ -25,11 +25,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x1, y1+square_size);
 				
-				if((this instanceof WhiteKnight) && !(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if((this instanceof WhiteKnight) && !(board.whitePieceOnSquare(x1, y1+square_size)))
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x1, y1+square_size)) )
 				moves.add(m1);
 			}
 			if(y1 - square_size >= 130)
@@ -39,11 +39,11 @@ public abstract class Knight extends ChessPiece
 				ChessPiece piece = board.anyPieceOnSquare(x1, y1-square_size);
 				
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x1, y1 - square_size)) )
 				moves.add(m1);
 				
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x1, y1 - square_size)) )
 				moves.add(m1);
 			}
 		}
@@ -57,11 +57,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x2, y2+square_size);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x2, y2 + square_size)) )
 				moves.add(m1);
 				
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x2, y2 + square_size)) )
 				moves.add(m1);
 			}
 			if(y2 - square_size >= 130)
@@ -70,11 +70,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x2, y2-square_size);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x2, y2 - square_size)) )
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x2, y2 - square_size)) )
 				moves.add(m1);
 			}
 		}
@@ -89,11 +89,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x3+square_size, y3);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x3+square_size, y3)) )
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x3+square_size, y3)) )
 				moves.add(m1);
 			}
 			if(x3 - square_size >= 130)
@@ -102,11 +102,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x3-square_size, y3);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x3-square_size, y3)) )
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x3-square_size, y3)) )
 				moves.add(m1);
 			}
 		}
@@ -121,11 +121,11 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x4+square_size, y4);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x4+square_size, y4)) )
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x4+square_size, y4)) )
 				moves.add(m1);
 			}
 			if(x4 - square_size >= 130)
@@ -134,14 +134,14 @@ public abstract class Knight extends ChessPiece
 				m1.setID(board.getIDFromLocation(m1));
 				ChessPiece piece = board.anyPieceOnSquare(x4-square_size, y4);
 				if(this instanceof WhiteKnight)
-				if(!(piece instanceof WhiteKnight || piece instanceof WhiteKing || piece instanceof WhitePawn ||piece instanceof WhiteBishop || piece instanceof WhiteRook || piece instanceof WhiteQueen) )
+				if(!(board.whitePieceOnSquare(x4-square_size, y4)) )
 				moves.add(m1);
 			
 				if(this instanceof BlackKnight)
-				if(!(piece instanceof BlackKnight || piece instanceof BlackKing || piece instanceof BlackPawn ||piece instanceof BlackBishop || piece instanceof BlackRook || piece instanceof BlackQueen) )
+				if(!(board.blackPieceOnSquare(x4-square_size, y4)) )
 				moves.add(m1);
 			
-			}
+			}	
 		}
 	}
 }

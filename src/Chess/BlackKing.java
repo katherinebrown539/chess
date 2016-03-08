@@ -31,7 +31,7 @@ public class BlackKing extends King
 				System.out.println(new_x);
 				//if(new_x <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-				can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 				if(piece == null || can_capture) //or instanceof others
 				{
 					SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -50,7 +50,7 @@ public class BlackKing extends King
 				new_x += square_size;
 				//if(new_x >= 1040) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-				can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 				if(piece == null || can_capture) //or instanceof others
 				{
 					SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -71,7 +71,7 @@ public class BlackKing extends King
 				System.out.println(new_x);
 				//if(new_y <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-				can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 				if(piece == null || can_capture) //or instanceof others
 				{
 					SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -89,7 +89,7 @@ public class BlackKing extends King
 				new_y += square_size;
 				//if(new_y >= 1040) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-				can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 				if(piece == null || can_capture) //or instanceof others
 				{
 					SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -111,7 +111,7 @@ public class BlackKing extends King
 			new_y -= square_size;
 			//if(!(new_x <= 1040 && new_y >= 137)) break;
 			ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-			can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+			can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 			if(piece == null || can_capture) //or instanceof others
 			{
 				SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -134,7 +134,7 @@ public class BlackKing extends King
 			new_y += square_size;
 			//if(!(new_x >= 137 && new_y <= 1040)) break;
 			ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-			can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+			can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 			if(piece == null || can_capture) //or instanceof others
 			{
 				SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -156,7 +156,7 @@ public class BlackKing extends King
 			new_y -= square_size;
 			//if(!(new_y >= 137 && new_x >= 137)) break;
 			ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-			can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+			can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 			if(piece == null || can_capture) //or instanceof others
 			{
 				SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -177,7 +177,7 @@ public class BlackKing extends King
 			new_y += square_size;
 			//if(!(new_y <= 1040 && new_x <= 1040)) break;
 			ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-			can_capture = (piece != null) && (piece instanceof WhitePawn || piece instanceof WhiteQueen);
+			can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
 			if(piece == null || can_capture) //or instanceof others
 			{
 				SquareCenter new_move = new SquareCenter(new_x, new_y, null);
