@@ -27,6 +27,15 @@ public class ChessBoard extends JPanel implements MouseListener
 	private ArrayList<SquareCenter> centers;
 	private ArrayList<ChessPiece> pieces; //list of pieces to draw
 	
+	private MoveState move; //polymorphic master
+	private SelectSquareState select_square;
+	private SelectPieceState select_piece;
+	
+	//	public void 
+	public SelectSquareState getSelectSquareState(){return select_square;}
+	public SelectPieceState getSelectPieceState(){return select_piece;}
+	public void changeState(MoveState ms){move = ms;}
+	
 	public boolean whitePieceOnSquare(int x, int y)
 	{
 		ChessPiece piece = anyPieceOnSquare(x,y);
@@ -96,6 +105,9 @@ public class ChessBoard extends JPanel implements MouseListener
 		this.height = height+10;
 		addMouseListener(this);
 		//this.add(board);
+		select_piece = new SelectPieceState(this);
+		select_square = new SelectSquareState(this);
+		move = select_piece;
 		 centers = new ArrayList<SquareCenter>();
 		int start_x = Math.abs(height-width)/2 - 10;
 		int start_y = Math.abs(height-width)/2 - 10;
@@ -183,11 +195,12 @@ public class ChessBoard extends JPanel implements MouseListener
 		int x = e.getX(); 
 		int y = e.getY();
 	
+
 		//go through each center, and if it's center is in between a square's boundaries and not a button, fill it out
 		Iterator<SquareCenter> iter = centers.iterator();
 		while(iter.hasNext())
 		{
-			//get x and y boundaries from the center
+			//get x and y boundaries from the center	
 			SquareCenter center = iter.next();
 			int square_x_start = center.getX() - (square_size/2) ;
 			int square_x_end  = center.getX() + (square_size/2);
@@ -203,15 +216,34 @@ public class ChessBoard extends JPanel implements MouseListener
 			else{
 				if(center.isSelected()){center.setSelected(false);}
 			}
-			repaint();
-			
+			//repaint();
+			takeMove(x,y);
 		}
-
 			
-			
+			repaint();		
 	}
-	
-	
+	public void takeMove(int x, int y)
+	{
+		move.mouseClicked(x,y);
+	}
+	public SquareCenter getSquareClicked(int x, int y)
+	{
+		Iterator<SquareCenter> iter = centers.iterator();
+		while(iter.hasNext())
+		{
+			SquareCenter center = iter.next();
+			int square_x_start = center.getX() - (square_size/2) ;
+			int square_x_end  = center.getX() + (square_size/2);
+			int square_y_start  = center.getY() - (square_size/2);
+			int square_y_end = center.getY() + (square_size/2);
+			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
+			{
+				return center;
+			}
+		}
+		
+		return null;
+	}
 	public void paint(Graphics g)
 	{
 		

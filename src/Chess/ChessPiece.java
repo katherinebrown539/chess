@@ -59,14 +59,19 @@ public abstract class ChessPiece extends JButton
 		loc.setID(id);
 	}
 	
-	public void move(SquareCenter end)
+	public void incrementMoveCount()
+	{
+		times_moved++;
+	}
+	public boolean move(SquareCenter end)
 	{
 		Iterator<SquareCenter> iter = moves.iterator();
 		while(iter.hasNext())
 		{
 			SquareCenter move = iter.next();
-			if(move.getX() == end.getX() && move.getY() == end.getY()){loc = end;}
+			if(move.getX() == end.getX() && move.getY() == end.getY()){loc = end; return true;}
 		}
+		return false;
 	}
 	
 	
@@ -129,6 +134,7 @@ public abstract class ChessPiece extends JButton
 		
 	}
 	
+	public String toString(){return piece_name + " at " + piece_loc;}
 	class PieceListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -141,20 +147,22 @@ public abstract class ChessPiece extends JButton
 				is_selected = true;
 				updatePossibleMoves();
 				highlightMoves();
-				System.out.println(piece_name + " at " + loc.toString() + " selected");
+				//SquareCenter selected = board.getSquareClicked();
+				
+				//System.out.println(piece_name + " at " + loc.toString() + " selected");
 				repaint();
 			}
 			else
 			{
 				board.setAllUnselected();
-				System.out.println(piece_name + " at " + loc.toString() + " deselected");
+				//System.out.println(piece_name + " at " + loc.toString() + " deselected");
 				is_selected = false;
 				repaint();
 			}
 			
+			board.takeMove(loc.getX(), loc.getY());
 			
-			
-			//repaint();
+			repaint();
 		}
 	}
 	
