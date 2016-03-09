@@ -69,7 +69,11 @@ public abstract class ChessPiece extends JButton
 		while(iter.hasNext())
 		{
 			SquareCenter move = iter.next();
-			if(move.getX() == end.getX() && move.getY() == end.getY()){loc = end; return true;}
+			if(move.getX() == end.getX() && move.getY() == end.getY()){
+				loc = end; 
+				board.updatePiece(this, end);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -149,13 +153,13 @@ public abstract class ChessPiece extends JButton
 				highlightMoves();
 				//SquareCenter selected = board.getSquareClicked();
 				
-				//System.out.println(piece_name + " at " + loc.toString() + " selected");
+				System.out.println(piece_name + " at " + loc.toString() + " selected");
 				repaint();
 			}
 			else
 			{
 				board.setAllUnselected();
-				//System.out.println(piece_name + " at " + loc.toString() + " deselected");
+				System.out.println(piece_name + " at " + loc.toString() + " deselected");
 				is_selected = false;
 				repaint();
 			}

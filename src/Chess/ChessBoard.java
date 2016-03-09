@@ -76,11 +76,17 @@ public class ChessBoard extends JPanel implements MouseListener
 	
 	public void updatePiece(ChessPiece cp, SquareCenter c)
 	{
+		pieces.remove(cp);
 		pieces.add(cp);
 		cp.setBounds(c.getX()-square_size/2 , c.getY()-square_size/2, square_size, square_size);
 		cp.setOpaque(false);
 		this.add(cp);
-		
+	}
+	
+	public void removePiece(ChessPiece cp)
+	{
+		pieces.remove(cp);
+		this.remove(cp);
 	}
 
 	
