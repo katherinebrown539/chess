@@ -1,3 +1,18 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.io.File;
+import java.awt.Graphics;
+import java.lang.Math;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+
+import java.awt.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
@@ -23,7 +38,7 @@ public abstract class ChessPiece extends JButton
 	protected Color highlight = new Color(0, 102, 204);
 	protected Color piece_color;
 	protected ChessBoard board;
-	//protected Image piece;
+	protected ImageIcon image;
 	protected String piece_id;
 	protected String piece_name;
 	protected String piece_loc;
@@ -37,6 +52,44 @@ public abstract class ChessPiece extends JButton
 		}
 		
 		repaint();
+	}
+	
+	public void setAttackedByWhite(boolean tf)
+	{
+		for(SquareCenter m:moves)
+		{
+			m.setAttackedByWhite(tf);
+		}
+	}
+	public void setAttackedByBlack(boolean tf)
+	{
+		for(SquareCenter m:moves)
+		{
+			m.setAttackedByBlack(tf);
+		}
+	}
+	public void setAttackedByWhite()
+	{
+		for(SquareCenter m:moves)
+		{
+			m.setAttackedByWhite(true);
+		}
+	}
+	public void setAttackedByBlack()
+	{
+		for(SquareCenter m:moves)
+		{
+			m.setAttackedByBlack(true);
+		}
+	}
+	
+	public void deselectAttacked()
+	{
+		for(SquareCenter m:moves)
+		{
+			m.setAttackedByWhite(false);
+			m.setAttackedByBlack(false);
+		}
 	}
 	public void deselectMoves()
 	{
@@ -94,6 +147,35 @@ public abstract class ChessPiece extends JButton
 		can_capture = tf;
 	}
 	
+	public ChessPiece(int scroe, int x, int y, int diag, SquareCenter loc, String id, String name, ChessBoard board, int size, String img)
+	{
+		//this.piece_color = pieceColor;
+		super(new ImageIcon(img));
+		//System.out.println();
+		try
+		{
+			this.setIcon(new ImageIcon(this.getClass().getResource(img)));
+		}
+		catch(Exception e){System.out.println(e);e.printStackTrace();}
+		this.square_size = size;
+		this.board = board;
+		this.score = score;
+		this.x_mov = x;
+		this.y_mov = y;
+		this.diag_mov = diag;
+		times_moved = 0;
+		is_selected = false;
+		in_play = true;
+		can_capture = true;
+		this.loc = loc;
+		piece_id = id;
+		piece_name = name;
+		moves = new ArrayList<SquareCenter>();
+		
+		//updatePossibleMoves();
+		this.addActionListener(new PieceListener());
+		//System.out.println(name);
+	}
 	public ChessPiece(int score, int x, int y, int diag, SquareCenter loc, String id, String name, ChessBoard board, int size, Color pieceColor)
 	{
 		this.piece_color = pieceColor;
@@ -111,6 +193,7 @@ public abstract class ChessPiece extends JButton
 		piece_id = id;
 		piece_name = name;
 		moves = new ArrayList<SquareCenter>();
+		
 		//updatePossibleMoves();
 		this.addActionListener(new PieceListener());
 		//System.out.println(name);
@@ -135,7 +218,7 @@ public abstract class ChessPiece extends JButton
 		
 		g.setFont(font);
 		g.drawString(piece_id, loc.getX() - 20, loc.getY() + 20);
-		
+		//super.setIcon(image);
 	}
 	
 	public String toString(){return piece_name + " at " + piece_loc;}
@@ -150,7 +233,7 @@ public abstract class ChessPiece extends JButton
 				board.setAllUnselected();
 				is_selected = true;
 				updatePossibleMoves();
-				highlightMoves();
+				//highlightMoves();
 				//SquareCenter selected = board.getSquareClicked();
 				
 				System.out.println(piece_name + " at " + loc.toString() + " selected");

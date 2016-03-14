@@ -115,5 +115,7 @@ public class BlackBishop extends Bishop
 			else
 			{break;}
 		}
+		
+		setAttackedByBlack();
 	}
 }

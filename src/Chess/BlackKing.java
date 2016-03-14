@@ -188,5 +188,33 @@ public class BlackKing extends King
 			}
 			
 		}
+		
+		setAttackedByBlack();
+	}
+	
+	public boolean checkForCheckmate()
+	{
+		if(!checkForCheck() || moves.size() == 0) return false; //stalemate or okay
+		updatePossibleMoves();
+		
+		for(int i = 0; i < moves.size(); i++){
+				if(moves.get(i).isAttackedByWhite()){moves.remove(moves.get(i));}
+		}
+		
+		return moves.size() == 0;
+	}
+	
+	public boolean checkForCheck()
+	{
+		return loc.isAttackedByWhite();
+	}
+	
+	public boolean checkForStalemate()
+	{
+		for(int i = 0; i < moves.size(); i++){
+				if(moves.get(i).isAttackedByWhite()){moves.remove(moves.get(i));}
+		}
+		
+		return moves.size() == 0;
 	}
 }

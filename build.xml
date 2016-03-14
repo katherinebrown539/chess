@@ -40,6 +40,14 @@
       </java>
    </target>
 
+   <target name="test" depends="build">
+   <java fork="true" failonerror="yes" classname="Test">
+	<classpath refid="class-path"/>
+	</java>
+	</target>
+	
+	
+	
    <delete file="chess.jar"/>
    
    <jar jarfile="chess.jar" basedir=".">

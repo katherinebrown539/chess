@@ -9,4 +9,10 @@ public abstract class King extends ChessPiece
 	}
 	
 	public abstract void updatePossibleMoves();
+	public abstract boolean checkForCheckmate();
+	
+	public abstract boolean checkForCheck();
+		
+	public abstract boolean checkForStalemate();
+	
 }

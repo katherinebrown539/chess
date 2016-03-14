@@ -192,5 +192,7 @@ public class BlackQueen extends Queen
 			else
 			{break;}
 		}
+		
+		setAttackedByBlack();
 	}
 }

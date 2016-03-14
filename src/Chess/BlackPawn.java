@@ -50,5 +50,7 @@ public class BlackPawn extends Pawn
 			n.setID(board.getIDFromLocation(n));
 			moves.add(n);
 		}
+		
+		setAttackedByBlack();
 	}
 }

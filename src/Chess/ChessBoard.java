@@ -26,16 +26,27 @@ public class ChessBoard extends JPanel implements MouseListener
 	private Color highlight = new Color(0, 102, 204);
 	private ArrayList<SquareCenter> centers;
 	private ArrayList<ChessPiece> pieces; //list of pieces to draw
-	
+	private boolean in_check;
 	private MoveState move; //polymorphic master
 	private SelectSquareState select_square;
 	private SelectPieceState select_piece;
+	private TurnState turn;
+	private WhiteTurnState white;
+	private BlackTurnState black;
 	
-	//	public void 
+	public boolean inCheck(){return in_check;}
+	public void setInCheck(boolean tf){in_check = tf;}
 	public SelectSquareState getSelectSquareState(){return select_square;}
 	public SelectPieceState getSelectPieceState(){return select_piece;}
 	public void changeState(MoveState ms){move = ms;}
 	
+	public void changeTurnState(TurnState state){turn = state;}
+	
+	public WhiteTurnState getWhiteTurnState(){return white;}
+	public BlackTurnState getBlackTurnState(){return black;}
+	public void changeTurns(){turn.changeTurns();	}
+	public boolean legalMoveSelected(int x, int y){return turn.legalPieceSelected(x,y);}
+	public void setPiece(ChessPiece p){turn.setPiece(p);}
 	public boolean whitePieceOnSquare(int x, int y)
 	{
 		ChessPiece piece = anyPieceOnSquare(x,y);
@@ -111,8 +122,12 @@ public class ChessBoard extends JPanel implements MouseListener
 		this.height = height+10;
 		addMouseListener(this);
 		//this.add(board);
+		in_check = false;
 		select_piece = new SelectPieceState(this);
 		select_square = new SelectSquareState(this);
+		white = new WhiteTurnState(this);
+		black = new BlackTurnState(this);
+		turn = white;
 		move = select_piece;
 		 centers = new ArrayList<SquareCenter>();
 		int start_x = Math.abs(height-width)/2 - 10;
@@ -136,6 +151,11 @@ public class ChessBoard extends JPanel implements MouseListener
 			start_x = Math.abs(height-width)/2 - 10;
 		}
 		highlight_locs = new ArrayList<SquareCenter>();
+		for(ChessPiece p:pieces)
+		{
+			if(blackPieceOnSquare(p.getCenterLocation().getX(),p.getCenterLocation().getY() )) p.setAttackedByBlack(true);
+			if(whitePieceOnSquare(p.getCenterLocation().getX(),p.getCenterLocation().getY() )) p.setAttackedByWhite(true);
+		}
 		////System.out.println(centers.size());
 	}
 	public void deselectAllSquares()
@@ -200,7 +220,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		//where was the mouse clicked?
 		int x = e.getX(); 
 		int y = e.getY();
-	
+		System.out.println(x+","+y);
 
 		//go through each center, and if it's center is in between a square's boundaries and not a button, fill it out
 		Iterator<SquareCenter> iter = centers.iterator();
@@ -224,6 +244,8 @@ public class ChessBoard extends JPanel implements MouseListener
 			}
 			//repaint();
 			takeMove(x,y);
+			
+			
 		}
 			
 			repaint();		
@@ -376,4 +398,6 @@ public class ChessBoard extends JPanel implements MouseListener
 	public void mouseExited(MouseEvent e){};
 	public void mousePressed(MouseEvent e){};
 	public void mouseReleased(MouseEvent e){};
+	
+	
 }

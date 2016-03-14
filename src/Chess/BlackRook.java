@@ -102,6 +102,6 @@ public class BlackRook extends Rook
 				else{break;}
 			}
 		
-		
+		setAttackedByBlack();
 	}
 }

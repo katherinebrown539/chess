@@ -108,9 +108,9 @@ public class WhiteBishop extends Bishop
 				moves.add(new_move);
 				if(can_capture) break;
 			}
-			else{break;}
-			
-			
+			else{break;}			
 		}
+		
+		setAttackedByWhite();
 	}
 }

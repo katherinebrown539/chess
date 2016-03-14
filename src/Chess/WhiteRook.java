@@ -1,4 +1,4 @@
-
+import javax.imageio.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,10 +7,15 @@ public class WhiteRook extends Rook
 {
 	public WhiteRook(ChessBoard board, int square)
 	{
+
+		//super(board, square, "/resources/pieces/white/rook.jpeg");
 		super(board, square, new Color(255,255,255));
+		
 	}
 	public WhiteRook(ChessGame game, int square)
 	{
+		
+		//super(game.getBoard(), square, "/resources/pieces/white/rook.jpeg");
 		super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
@@ -103,6 +108,6 @@ public class WhiteRook extends Rook
 				else{break;}
 			}
 		
-		
+		setAttackedByWhite();
 	}
 }

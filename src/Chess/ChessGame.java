@@ -5,9 +5,18 @@ import java.util.ArrayList;
 import java.io.File;
 import java.awt.Graphics;
 import java.lang.Math;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+
+import java.awt.*;
+import java.awt.image.*;
+import javax.imageio.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 public class ChessGame extends JFrame
 {
 	private ChessBoard board;
+	BufferedImage image;
 	private int height;
 	private int width;
 	private ArrayList<SquareCenter> square_centers;
@@ -56,7 +65,14 @@ public class ChessGame extends JFrame
 		
 		this.width = width;
 		this.height = height;
-		
+		 try {
+         
+         image = ImageIO.read(new File("chess_background.jpeg"));
+         System.out.println("Success.");
+      } catch (Exception e) {
+         System.out.println("Failed.");
+		 System.out.println(e);
+      } 
 		this.add(board);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(this.width+250, this.height+250);
@@ -64,5 +80,6 @@ public class ChessGame extends JFrame
 		int count = 0;
 	}
 	
+
 
 }

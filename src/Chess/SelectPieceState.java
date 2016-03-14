@@ -7,11 +7,17 @@ public class SelectPieceState implements MoveState
 	{
 		//System.out.println("in select piece state");
 		ChessPiece selected = board.anyPieceOnSquare(x,y);
-		
-		if(selected != null )
+		if((board.inCheck() && !(selected instanceof King)) || (!board.inCheck())) 
+			board.setPiece(selected);//tell the turn what piece was selected
+		boolean legal = board.legalMoveSelected(x,y);
+		//String message = legal?"A legal piece was selected!":"An illegal piece was selected!";
+		//System.out.println(message);
+		if(!legal && selected != null){selected.setSelected(false); return;}
+		if(selected != null  && legal)
 		{
 			if(selected.isSelected())
 			{
+				selected.highlightMoves();
 				SelectSquareState sss = board.getSelectSquareState();
 				//change state to SelectSquareState
 				board.changeState(sss);

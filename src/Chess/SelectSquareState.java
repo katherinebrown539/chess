@@ -9,7 +9,7 @@ public class SelectSquareState implements MoveState
 	{
 		//System.out.println("In select square state");
 		if(piece == null) return; //no piece is selected
-		
+	
 		//get square selected
 		SquareCenter square_selected = board.getSquareClicked(x,y);
 		if(square_selected != null)
@@ -17,7 +17,7 @@ public class SelectSquareState implements MoveState
 			//see if capture
 			ChessPiece to_capture = board.anyPieceOnSquare(x,y);
 			
-			
+			piece.deselectAttacked();
 			//move
 			boolean res = piece.move(square_selected);
 			if(res)
@@ -32,6 +32,10 @@ public class SelectSquareState implements MoveState
 				}
 				piece.incrementMoveCount();
 				piece.setSelected(false);
+				board.changeTurns();
+				if(board.blackPieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByBlack(true);
+				if(board.whitePieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByWhite(true);
+		
 				//System.out.println(piece + "moved");
 			}
 			//else{System.out.println(piece + " not moved");}

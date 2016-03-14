@@ -143,5 +143,8 @@ public abstract class Knight extends ChessPiece
 			
 			}	
 		}
+		
+		if(this instanceof WhiteKnight) setAttackedByWhite();
+		else setAttackedByBlack();
 	}
 }
