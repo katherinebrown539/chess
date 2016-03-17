@@ -151,7 +151,7 @@ public abstract class ChessPiece extends JButton
 	{
 		//this.piece_color = pieceColor;
 		super(new ImageIcon(img));
-		//System.out.println();
+		System.out.println(img);
 		try
 		{
 			this.setIcon(new ImageIcon(this.getClass().getResource(img)));

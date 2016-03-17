@@ -8,15 +8,16 @@ public class WhiteRook extends Rook
 	public WhiteRook(ChessBoard board, int square)
 	{
 
-		//super(board, square, "/resources/pieces/white/rook.jpeg");
-		super(board, square, new Color(255,255,255));
+	//C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg
+		super(board, square, "C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg");
+		//super(board, square, new Color(255,255,255));
 		
 	}
 	public WhiteRook(ChessGame game, int square)
 	{
 		
-		//super(game.getBoard(), square, "/resources/pieces/white/rook.jpeg");
-		super(game.getBoard(), square, new Color(255,255,255));
+		super(game.getBoard(), square, "C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg");
+		//super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
 	public void updatePossibleMoves()

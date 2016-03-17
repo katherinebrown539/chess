@@ -7,9 +7,9 @@ public class SelectSquareState implements MoveState
 	public void setSelectedPiece(ChessPiece piece){	this.piece = piece;}
 	public void mouseClicked(int x, int y)
 	{
-		//System.out.println("In select square state");
+		System.out.println("In select square state");
 		if(piece == null) return; //no piece is selected
-	
+		System.out.println(piece);
 		//get square selected
 		SquareCenter square_selected = board.getSquareClicked(x,y);
 		if(square_selected != null)
@@ -17,11 +17,13 @@ public class SelectSquareState implements MoveState
 			//see if capture
 			ChessPiece to_capture = board.anyPieceOnSquare(x,y);
 			
-			piece.deselectAttacked();
+			
 			//move
 			boolean res = piece.move(square_selected);
+			System.out.println(res);
 			if(res)
 			{
+				piece.deselectAttacked();
 				//change back to selectPieceState, deselecting piece
 				board.changeState(board.getSelectPieceState());
 				if(to_capture != null)
@@ -33,9 +35,14 @@ public class SelectSquareState implements MoveState
 				piece.incrementMoveCount();
 				piece.setSelected(false);
 				board.changeTurns();
+				
+				//set the attacked pieces
 				if(board.blackPieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByBlack(true);
 				if(board.whitePieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByWhite(true);
-		
+				
+				//if king is attacked
+				//put board in check
+				
 				//System.out.println(piece + "moved");
 			}
 			//else{System.out.println(piece + " not moved");}
@@ -43,9 +50,10 @@ public class SelectSquareState implements MoveState
 		else
 		{
 			//change back, an illegal selections means they want to cancel action
+			piece.setSelected(false);
 			board.changeState(board.getSelectPieceState());
-			//piece.setSelected(false);
-			//System.out.println(piece + " not moved");
+			piece = null; 
+			System.out.println(piece + " not moved");
 		}
 			
 	}

@@ -1,0 +1,4 @@
+1) Detect Checkmate/Check/Stalemate
+2) Resrict moves during Check
+3) Fix that stupid piece selection thing
+4) 
