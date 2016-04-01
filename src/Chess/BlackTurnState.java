@@ -3,7 +3,10 @@ public class BlackTurnState implements TurnState
 	private ChessBoard board;
 	private ChessPiece piece;
 	
-	public void setPiece(ChessPiece piece){this.piece = piece;}
+	public void setPiece(ChessPiece piece)
+	{	this.piece = piece;
+		if(piece != null) {piece.highlightMoves();}
+	}
 	
 	public BlackTurnState(ChessBoard board)
 	{

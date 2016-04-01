@@ -2,7 +2,10 @@ public class WhiteTurnState implements TurnState
 {
 	private ChessBoard board;
 	private ChessPiece piece;
-	public void setPiece(ChessPiece piece){this.piece = piece;}
+	public void setPiece(ChessPiece piece)
+	{	this.piece = piece;
+		if(piece != null) {piece.highlightMoves();}
+	}
 	public WhiteTurnState(ChessBoard board)
 	{
 		this.board = board;

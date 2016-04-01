@@ -54,6 +54,10 @@ public abstract class ChessPiece extends JButton
 		repaint();
 	}
 	
+	public void addMove(SquareCenter end)
+	{
+		moves.add(end);
+	}
 	public void setAttackedByWhite(boolean tf)
 	{
 		for(SquareCenter m:moves)
@@ -111,6 +115,8 @@ public abstract class ChessPiece extends JButton
 		
 		loc.setID(id);
 	}
+	
+	public int getMoveCount(){return times_moved;}
 	
 	public void incrementMoveCount()
 	{

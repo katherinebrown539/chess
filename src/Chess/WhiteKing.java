@@ -184,7 +184,7 @@ public class WhiteKing extends King
 			}
 				
 		}
-		
+		canCastle();
 		setAttackedByWhite();
 	}
 	

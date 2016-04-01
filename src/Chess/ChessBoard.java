@@ -47,12 +47,27 @@ public class ChessBoard extends JPanel implements MouseListener
 	public void changeTurns(){turn.changeTurns();	}
 	public boolean legalMoveSelected(int x, int y){return turn.legalPieceSelected(x,y);}
 	public void setPiece(ChessPiece p){turn.setPiece(p);}
+	public boolean whitePieceOnSquare(ChessPiece piece)
+	{
+		if(piece instanceof WhitePawn || piece instanceof WhiteRook || piece instanceof WhiteKnight || piece instanceof WhiteBishop || piece instanceof WhiteQueen || piece instanceof WhiteKing)
+		{return true;}
+	
+		return false;
+	}
+	
+	public boolean blackPieceOnSquare(ChessPiece piece)
+	{
+		if(piece instanceof BlackPawn || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackQueen || piece instanceof BlackKing)
+		{return true;}
+	
+		return false;
+	}
 	public boolean whitePieceOnSquare(int x, int y)
 	{
 		ChessPiece piece = anyPieceOnSquare(x,y);
 		if(piece == null){ return false; } 
 		
-		if(piece instanceof WhitePawn || piece instanceof WhiteRook || piece instanceof WhiteKnight || piece instanceof WhiteBishop || piece instanceof WhiteQueen)
+		if(piece instanceof WhitePawn || piece instanceof WhiteRook || piece instanceof WhiteKnight || piece instanceof WhiteBishop || piece instanceof WhiteQueen || piece instanceof WhiteKing)
 		{return true;}
 	
 		return false;
@@ -62,7 +77,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		ChessPiece piece = anyPieceOnSquare(x,y);
 		if(piece == null){ return false; } 
 		
-		if(piece instanceof BlackPawn || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackQueen)
+		if(piece instanceof BlackPawn || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackQueen || piece instanceof BlackKing)
 		{return true;}
 	
 		return false;
@@ -236,6 +251,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			
 			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
 			{
+				System.out.println(center);
 				if(center.isSelected()) {center.setSelected(false);}
 				else center.setSelected(true);			
 			}	
@@ -266,6 +282,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			int square_y_end = center.getY() + (square_size/2);
 			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
 			{
+				//System.out.println(center);
 				return center;
 			}
 		}

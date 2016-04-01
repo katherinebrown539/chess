@@ -189,6 +189,7 @@ public class BlackKing extends King
 			
 		}
 		
+		canCastle();
 		setAttackedByBlack();
 	}
 	

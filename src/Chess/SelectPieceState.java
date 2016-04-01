@@ -5,13 +5,16 @@ public class SelectPieceState implements MoveState
 	public SelectPieceState(ChessBoard board){this.board = board;}
 	public void mouseClicked(int x, int y)
 	{
-		System.out.println("in select piece state");
+		//System.out.println("in select piece state");
 		ChessPiece selected = board.anyPieceOnSquare(x,y);
-		//if((board.inCheck() && !(selected instanceof King)) || (!board.inCheck())) 
-		//{	
+		//System.out.println(selected);
+		boolean legal = board.legalMoveSelected(x,y); //was a legal piece selected for the current player
+		if(legal) 
+		{	
 			board.setPiece(selected);//tell the turn what piece was selected
-		//}
-		boolean legal = board.legalMoveSelected(x,y);
+			if(selected != null) selected.setSelected(true);
+		}
+		
 		//String message = legal?"A legal piece was selected!":"An illegal piece was selected!";
 		//System.out.println(message);
 		if(!legal && selected != null)
