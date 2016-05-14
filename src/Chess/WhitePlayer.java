@@ -86,4 +86,29 @@ public class WhitePlayer
 			game.addPiece(pawn, pawn_starts[i]);
 		}
 	}
+	
+	/* public void refreshAttacked()
+	{
+		for(WhitePawn p : pawns)
+		{
+			p.setAttackedByWhite(true);
+		}
+		for(WhiteRook r : rooks)
+		{
+			r.setAttackedByWhite(true);
+		}
+		for(WhiteKnight k : knights)
+		{
+			k.setAttackedByWhite(true);
+		}
+		for(WhiteBishop b : bishops)
+		{
+			b.setAttackedByWhite(true);
+		}
+		for(WhiteQueen q : queens)
+		{
+			q.setAttackedByWhite(true);
+		}
+		king.setAttackedByWhite(true);
+	} */
 }

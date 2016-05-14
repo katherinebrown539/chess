@@ -6,9 +6,11 @@ import java.awt.Graphics;
 import java.lang.Math;
 import java.util.Iterator;
 import javax.swing.border.EmptyBorder;
+import javax.swing.*;
 
 public class ChessBoard extends JPanel implements MouseListener
 {
+	private ChessGame cb;
 	private Graphics g;
 	private int board_size;
 	private int height;
@@ -25,6 +27,8 @@ public class ChessBoard extends JPanel implements MouseListener
 	private Color light = new Color(226,204,171);
 	private Color highlight = new Color(0, 102, 204);
 	private ArrayList<SquareCenter> centers;
+	private ArrayList<SquareCenter> white_attacked;
+	private ArrayList<SquareCenter> black_attacked;
 	private ArrayList<ChessPiece> pieces; //list of pieces to draw
 	private boolean in_check;
 	private MoveState move; //polymorphic master
@@ -47,6 +51,126 @@ public class ChessBoard extends JPanel implements MouseListener
 	public void changeTurns(){turn.changeTurns();	}
 	public boolean legalMoveSelected(int x, int y){return turn.legalPieceSelected(x,y);}
 	public void setPiece(ChessPiece p){turn.setPiece(p);}
+	
+	public void setGame(ChessGame c){cb = c;}
+	
+	public ArrayList<SquareCenter> getPiecesWhiteAttacks() {return white_attacked;}
+	public ArrayList<SquareCenter> getPiecesBlackAttacks() {return black_attacked;}
+	
+	public void removeAttacked(ChessPiece piece)
+	{
+		boolean isBlack = blackPieceOnSquare(piece.getCenterLocation().getX(), piece.getCenterLocation().getY());
+		
+		ArrayList<SquareCenter> attacked = piece.updatePossibleMoves();
+		
+		System.out.println("Refreshing attacked: ");
+		Iterator<SquareCenter> iter = attacked.iterator();
+		
+		
+		while(iter.hasNext())//for(SquareCenter s : attacked)
+		{
+			SquareCenter s = iter.next();
+			String id = s.getID();
+			
+			SquareCenter loc = getCenterFromID(id);
+			System.out.println(id + " ==== " + loc.getID());
+			
+			
+			if(isBlack) 
+			{
+				if(black_attacked.contains(loc))
+				{
+					black_attacked.remove(loc);
+				}
+			}
+			else
+			{ 
+				if(white_attacked.contains(loc))
+				{
+					white_attacked.remove(loc);
+				}
+			}
+		}
+	}
+	public void addAttacked(ChessPiece piece)
+	{
+		boolean isBlack = blackPieceOnSquare(piece.getCenterLocation().getX(), piece.getCenterLocation().getY());
+		ArrayList<SquareCenter> attacked = piece.updatePossibleMoves();
+		
+		System.out.println("Refreshing attacked: ");
+		Iterator<SquareCenter> iter = attacked.iterator();
+		
+		
+		while(iter.hasNext())//for(SquareCenter s : attacked)
+		{
+			SquareCenter s = iter.next();
+			String id = s.getID();
+			
+			SquareCenter loc = getCenterFromID(id);
+			System.out.println(id + " ==== " + loc.getID());
+			
+			
+			if(isBlack) 
+			{
+				if(!black_attacked.contains(loc))
+				{
+					black_attacked.add(loc);
+				}
+				
+			}
+			else
+			{ 
+				if(!white_attacked.contains(loc))
+				{
+					white_attacked.add(loc);
+				}
+			}
+		}
+	} 
+	
+	public void pawnPromotion(Pawn p)
+	{
+		//String[] options = {"Queen", "Knight", "Bishop", "Rook"};
+		BlackQueen bq = new BlackQueen(this, square_size);
+		bq.setLocation(p.getCenterLocation());
+		BlackRook br = new BlackRook(this, square_size);
+		br.setLocation(p.getCenterLocation());
+		BlackKnight bk = new BlackKnight(this, square_size);
+		bk.setLocation(p.getCenterLocation());
+		BlackBishop bb = new BlackBishop(this, square_size);
+		bb.setLocation(p.getCenterLocation());
+		WhiteQueen wq = new WhiteQueen(this, square_size);
+		wq.setLocation(p.getCenterLocation());
+		WhiteRook wr = new WhiteRook(this, square_size);
+		wr.setLocation(p.getCenterLocation());
+		WhiteKnight wk = new WhiteKnight(this, square_size);
+		wk.setLocation(p.getCenterLocation());
+		WhiteBishop wb = new WhiteBishop(this, square_size);
+		wb.setLocation(p.getCenterLocation());
+		ChessPiece[] white = {wq,wr,wk,wb};
+		ChessPiece[] black = {bq,br,bk,bb};
+		ChessPiece[] options = (p instanceof BlackPawn)?black : white;
+		ChessPiece value = null;
+		while(value == null)
+		{
+			value= (ChessPiece)JOptionPane.showInputDialog(this,"What do you wish to promote your pawn to?", "Pawn Promotion!", JOptionPane.QUESTION_MESSAGE,  null, options, options[0]);
+			System.out.println(value);
+		}
+		
+		SquareCenter loc = p.getCenterLocation();
+		value.setLocation(loc);
+		//System.out.println(value);
+		updatePiece(value, loc);
+		removePiece(p);
+		//pieces.add(value);
+		repaint();
+		
+		//System.out.println(isAnyPieceOnSelected(p.getX(), p.getY()));
+		
+	}
+	
+	
+	
 	public boolean whitePieceOnSquare(ChessPiece piece)
 	{
 		if(piece instanceof WhitePawn || piece instanceof WhiteRook || piece instanceof WhiteKnight || piece instanceof WhiteBishop || piece instanceof WhiteQueen || piece instanceof WhiteKing)
@@ -82,11 +206,29 @@ public class ChessBoard extends JPanel implements MouseListener
 	
 		return false;
 	}
+	
 	public void printCenters()
 	{
 		for(SquareCenter sc : centers)
 		{
 			System.out.println(sc.getX() + " , " + sc.getY());
+		}
+	}
+	
+	public void printAttacked()
+	{
+		
+		
+		System.out.println("Whtie attacks: ");
+		for(SquareCenter sc:white_attacked)
+		{
+			System.out.println(sc.toString());
+		}
+		
+		System.out.println("Black attacks: ");
+		for(SquareCenter sc:black_attacked)
+		{
+			System.out.println(sc.toString());
 		}
 	}
 	public void addPiece(ChessPiece cp, String id)
@@ -118,6 +260,8 @@ public class ChessBoard extends JPanel implements MouseListener
 	
 	public SquareCenter getCenterFromID(String id)
 	{
+		int loc = getIndexFromID(id);
+		if(loc > 64 || loc < 0) return null;
 		return centers.get(getIndexFromID(id));
 	}
 	
@@ -127,6 +271,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		int number = 8 - ((int) id.charAt(1) -48);
 				
 		int loc  =8*number + letter;
+		if(loc > 64 || loc < 0) return -1;
 		return loc;
 	}
 	
@@ -138,6 +283,8 @@ public class ChessBoard extends JPanel implements MouseListener
 		addMouseListener(this);
 		//this.add(board);
 		in_check = false;
+		white_attacked = new ArrayList<SquareCenter>();
+		black_attacked = new ArrayList<SquareCenter>();
 		select_piece = new SelectPieceState(this);
 		select_square = new SelectSquareState(this);
 		white = new WhiteTurnState(this);
@@ -189,6 +336,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		}
 		System.out.println("---------------");
 	}
+	
 	public void paintSelectedCenters(Graphics g)
 	{
 		for(SquareCenter c: centers)
@@ -199,6 +347,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		}
 		
 	}
+	
 	public boolean isAnyPieceSelected()
 	{
 		for(ChessPiece p:pieces)
@@ -216,6 +365,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			p.setSelected(false);
 		}
 	}
+	
 	public void setAllSquaresUnselected()
 	{
 		for(SquareCenter c: centers)
@@ -223,12 +373,14 @@ public class ChessBoard extends JPanel implements MouseListener
 			c.setSelected(false);
 		}
 	}
+	
 	public void setAllUnselected()
 	{
 		setAllSquaresUnselected();
 		setAllPiecesUnselected();
 		repaint();
 	}
+	
 	public void mouseClicked(MouseEvent e)
 	{
 		//deselectAllSquares();
@@ -266,10 +418,12 @@ public class ChessBoard extends JPanel implements MouseListener
 			
 			repaint();		
 	}
+	
 	public void takeMove(int x, int y)
 	{
 		move.mouseClicked(x,y);
 	}
+	
 	public SquareCenter getSquareClicked(int x, int y)
 	{
 		Iterator<SquareCenter> iter = centers.iterator();
@@ -289,9 +443,10 @@ public class ChessBoard extends JPanel implements MouseListener
 		
 		return null;
 	}
+	
 	public void paint(Graphics g)
 	{
-		
+		cb.paint(g);
 		this.g = g;
 		//printSelectedCenters();
 		int start_x = Math.abs(height-width)/2 - 10;
@@ -376,6 +531,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		}
 		repaint();
 	}
+	
 	
 	public ChessPiece anyPieceOnSquare(int x, int y)
 	{

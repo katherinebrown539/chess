@@ -16,6 +16,7 @@ public class BlackTurnState implements TurnState
 	public boolean legalPieceSelected(int x, int y)
 	{
 		ChessPiece piece = board.anyPieceOnSquare(x,y);
+		//board.refreshAttacked();
 		return (board.blackPieceOnSquare(x,y) || piece instanceof BlackKing);//don't want to change turns until move is completed
 	}
 	

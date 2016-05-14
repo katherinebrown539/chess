@@ -14,7 +14,7 @@ public class WhiteTurnState implements TurnState
 	public boolean legalPieceSelected(int x, int y)
 	{
 		//ChessPiece piece = board.anyPieceOnSquare(x,y);
-		
+		//board.refreshAttacked();
 		return (board.whitePieceOnSquare(x,y) || piece instanceof WhiteKing);//don't want to change turns until move is completed
 	}
 	

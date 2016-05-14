@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
+
 public abstract class King extends ChessPiece
 {
 	private boolean can_castle;
@@ -11,12 +13,66 @@ public abstract class King extends ChessPiece
 		can_castle = true;
 	}
 	
-	public abstract void updatePossibleMoves();
+	public ArrayList<SquareCenter> getAttackedSquares()
+	{
+		return updatePossibleMoves();
+	}
+	
+	public ArrayList<SquareCenter> getAttackedSquares(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
+	{
+		return updatePossibleMoves(white, black, board);
+	}
+	
+	public abstract ArrayList<SquareCenter> updatePossibleMoves();
+	public abstract ArrayList<SquareCenter> updatePossibleMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board);
 	public abstract boolean checkForCheckmate();
 	
 	public abstract boolean checkForCheck();
 		
 	public abstract boolean checkForStalemate();
+	public void getLegalMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
+	{
+		boolean isBlack = this instanceof BlackKing;
+		
+		Iterator<SquareCenter> iter = isBlack? white.iterator() : black.iterator(); //if this ternary operator isn't love, then I just don't know what is...
+		
+		while(iter.hasNext())
+		{
+			SquareCenter curr = board.getCenterFromID(iter.next().getID());
+			System.out.println("Looking at " + curr.toString());
+			if(containsMove(moves, curr))
+			{
+				System.out.println("Cannot move to " + curr.toString());
+				removeMove(moves, curr);
+			}
+		}
+	}
+	
+	public boolean containsMove(ArrayList<SquareCenter> to_look, SquareCenter what_to_look_for)
+	{
+		for(SquareCenter curr : to_look)
+		{
+			boolean equals = curr.toString().equalsIgnoreCase(what_to_look_for.toString());
+			if(equals) return true;
+		}
+		
+		return false;
+	}
+	
+	public void removeMove(ArrayList<SquareCenter> blah, SquareCenter to_del)
+	{
+		SquareCenter to_remove = null;
+		for(SquareCenter curr : blah)
+		{
+			if(curr.toString().equalsIgnoreCase(to_del.toString()))
+			{
+				to_remove = curr;
+				break;
+			}
+		}
+		
+		if(to_remove != null){blah.remove(to_remove);}
+	}
 	
 	public void canCastle()
 	{

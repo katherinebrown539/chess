@@ -25,6 +25,8 @@ public class SelectPieceState implements MoveState
 		}
 		if(selected != null  && legal && selected.isSelected())
 		{
+			//board.refreshAttacked();
+			if(selected instanceof King){((King) selected).getLegalMoves(board.getPiecesWhiteAttacks(), board.getPiecesBlackAttacks(), board);}
 			selected.highlightMoves();
 			SelectSquareState sss = board.getSelectSquareState();
 			//change state to SelectSquareState

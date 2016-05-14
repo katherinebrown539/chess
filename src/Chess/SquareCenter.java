@@ -3,7 +3,7 @@ public class SquareCenter
 	private int x;
 	private int y;
 	private String id;
-	private boolean is_selected;
+	private boolean is_selected;	
 	private boolean is_attacked_by_white;
 	private boolean is_attacked_by_black;
 	

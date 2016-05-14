@@ -1,3 +1,4 @@
 1) Detect Checkmate/Check/Stalemate
 2) Resrict moves during Check (legal move selected)
-4) Enpassant
+
+So, instead of detecting attacked pieces when a piece is moved, detect them FOR ALL THE PIECES before and after each move.

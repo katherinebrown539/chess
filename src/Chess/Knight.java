@@ -10,8 +10,10 @@ public abstract class Knight extends ChessPiece
 	}
 	
 	
-	public void updatePossibleMoves()
+	public ArrayList<SquareCenter> updatePossibleMoves()
 	{
+		/* if(this instanceof WhiteKnight) setAttackedByWhite(false);
+		else setAttackedByBlack(false); */
 		moves = new ArrayList<SquareCenter>();
 		
 		int x1 = loc.getX() + 2*square_size;
@@ -143,8 +145,18 @@ public abstract class Knight extends ChessPiece
 			
 			}	
 		}
-		
-		if(this instanceof WhiteKnight) setAttackedByWhite();
-		else setAttackedByBlack();
+		return moves;
+		//if(this instanceof WhiteKnight) setAttackedByWhite(true);
+		//else setAttackedByBlack(true);
+	}
+	
+	public ArrayList<SquareCenter> getAttackedSquares()
+	{
+		return updatePossibleMoves();
+	}
+	
+	public ArrayList<SquareCenter> getAttackedSquares(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
+	{
+		return updatePossibleMoves();
 	}
 }

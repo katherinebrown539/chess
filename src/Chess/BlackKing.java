@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.*;
 public class BlackKing extends King
 {
 	public BlackKing(ChessBoard board, int square)
@@ -13,8 +13,16 @@ public class BlackKing extends King
 		super(game.getBoard(), square, new Color(0,0,0));
 	}
 	
-	public void updatePossibleMoves()
+	public ArrayList<SquareCenter> updatePossibleMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
 	{
+		updatePossibleMoves();
+		getLegalMoves(white, black, board);
+		return moves;
+	}
+	
+	public ArrayList<SquareCenter> updatePossibleMoves()
+	{
+		//setAttackedByBlack(false);
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
 		int new_y = loc.getY();
@@ -190,8 +198,32 @@ public class BlackKing extends King
 		}
 		
 		canCastle();
-		setAttackedByBlack();
+		//getLegalMoves();
+		//setAttackedByBlack(true);
+		return moves;
 	}
+	
+	/*
+	public void getLegalMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black)
+	{
+		Iterator<SquareCenter> iter = moves.iterator();
+		boolean works = false;
+		while(iter.hasNext())
+		{
+			SquareCenter curr = iter.next();
+			Iterator<SquareCenter> white_attacked = white.iterator();
+			while(white_attacked.hasNext())
+			{
+				SquareCenter s = white_attacked.next();
+				if(s.getID().equalsIgnoreCase(curr.getID())){works = true; break;}
+			}
+			if(works)
+			{
+				moves.remove(curr);
+			}
+		}
+	}
+	*/
 	
 	public boolean checkForCheckmate()
 	{

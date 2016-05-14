@@ -7,13 +7,17 @@ public class BlackPawn extends Pawn
 	public BlackPawn(ChessBoard board, int square)
 	{
 		super(board, square, new Color(0,0,0));
+		
 	}
 	public BlackPawn(ChessGame game, int square)
 	{
 		super(game.getBoard(), square, new Color(0,0,0));
+
 	}
 	
-	public void updatePossibleMoves()
+
+
+	public ArrayList<SquareCenter> updatePossibleMoves()
 	{
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
@@ -52,5 +56,26 @@ public class BlackPawn extends Pawn
 		}
 		
 		setAttackedByBlack();
+		return moves;
+	}
+	
+	public ArrayList<SquareCenter> getAttackedSquares()
+	{
+		ArrayList<SquareCenter> to_return = new ArrayList<SquareCenter>();
+		
+		SquareCenter n = new SquareCenter(loc.getX() - square_size, loc.getY() + square_size, null);
+		n.setID(board.getIDFromLocation(n));
+		to_return.add(n);
+			
+		n = new SquareCenter(loc.getX() + square_size, loc.getY() + square_size, null);
+		n.setID(board.getIDFromLocation(n));
+		to_return.add(n);
+		
+		return to_return;
+	}
+	
+	public ArrayList<SquareCenter> getAttackedSquares(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
+	{
+		return updatePossibleMoves();
 	}
 }

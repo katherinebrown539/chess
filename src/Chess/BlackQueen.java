@@ -13,8 +13,9 @@ public class BlackQueen extends Queen
 		super(game.getBoard(), square, new Color(0,0,0));
 	}
 	
-	public void updatePossibleMoves()
+	public  ArrayList<SquareCenter> updatePossibleMoves()
 	{
+		//setAttackedByBlack(false);
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
 		int new_y = loc.getY();
@@ -28,7 +29,7 @@ public class BlackQueen extends Queen
 			while(new_x > 135)
 			{
 				new_x -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				if(new_x <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
@@ -68,7 +69,7 @@ public class BlackQueen extends Queen
 		while(new_y > 135)
 			{
 				new_y -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				if(new_y <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
@@ -126,7 +127,7 @@ public class BlackQueen extends Queen
 		}
 		
 		
-		//right dpwn diagonal
+		//right down diagonal
 		new_x = x;
 		new_y = y;
 		while(new_x >= 137 && new_y <= 1040)
@@ -193,6 +194,7 @@ public class BlackQueen extends Queen
 			{break;}
 		}
 		
-		setAttackedByBlack();
+		return moves;
+		//setAttackedByBlack(true);
 	}
 }

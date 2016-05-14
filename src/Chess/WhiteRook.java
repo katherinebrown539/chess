@@ -20,8 +20,9 @@ public class WhiteRook extends Rook
 		super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
-	public void updatePossibleMoves()
+	public ArrayList<SquareCenter> updatePossibleMoves()
 	{
+		//setAttackedByWhite(false);
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
 		int new_y = loc.getY();
@@ -59,7 +60,7 @@ public class WhiteRook extends Rook
 			
 				if(new_x >= 1040) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
-				can_capture = (piece != null) && ( piece instanceof BlackPawn || piece instanceof BlackQueen/*|| piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackKing*/);
+				can_capture = (piece != null) && ( piece instanceof BlackPawn || piece instanceof BlackQueen || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop/* || piece instanceof BlackKing*/);
 				if(piece == null || can_capture) //or instanceof others
 				{
 					SquareCenter new_move = new SquareCenter(new_x, new_y, null);
@@ -108,7 +109,7 @@ public class WhiteRook extends Rook
 				}
 				else{break;}
 			}
-		
-		setAttackedByWhite();
+		return moves;
+		//setAttackedByWhite(true);
 	}
 }

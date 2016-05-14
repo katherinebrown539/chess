@@ -13,8 +13,10 @@ public class WhiteBishop extends Bishop
 		super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
-	public void updatePossibleMoves()
+	public ArrayList<SquareCenter> updatePossibleMoves()
 	{
+		//setAttackedByWhite(false);
+
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
 		int new_y = loc.getY();
@@ -110,7 +112,7 @@ public class WhiteBishop extends Bishop
 			}
 			else{break;}			
 		}
-		
-		setAttackedByWhite();
+		//setAttackedByWhite(true);
+		return moves;
 	}
 }

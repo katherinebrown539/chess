@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.*;
 public class WhiteKing extends King
 {
 	public WhiteKing(ChessBoard board, int square)
@@ -13,14 +13,21 @@ public class WhiteKing extends King
 		super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
-	public void updatePossibleMoves()
+	public ArrayList<SquareCenter> updatePossibleMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
 	{
+		updatePossibleMoves();
+		getLegalMoves(white, black, board);
+		return moves;
+	}
+	public  ArrayList<SquareCenter> updatePossibleMoves()
+	{
+		//setAttackedByWhite(false);
 		moves = new ArrayList<SquareCenter>();
 		int new_x = loc.getX();
 		int new_y = loc.getY();
 		int x = new_x;
 		int y = new_y;
-		System.out.println(loc);
+		//System.out.println(loc);
 		
 		//left horizontal
 		//y stays the same, left decreases
@@ -185,10 +192,33 @@ public class WhiteKing extends King
 				
 		}
 		canCastle();
-		setAttackedByWhite();
+		//getLegalMoves();
+		//setAttackedByWhite(true);
+		return moves;
 	}
-	
-	
+	/*
+	public void getLegalMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black)
+	{
+		//TODO FIX THE CONCURRENT THINGIE HERE AND IN BLACK KING!!!!
+		
+		Iterator<SquareCenter> iter = moves.iterator();
+		boolean works = false;
+		while(iter.hasNext())
+		{
+			SquareCenter curr = iter.next();
+			Iterator<SquareCenter> black_attacked = black.iterator();
+			while(black_attacked.hasNext())
+			{
+				SquareCenter s = black_attacked.next();
+				if(s.getID().equalsIgnoreCase(curr.getID())){works = true; break;}
+			}
+			if(works)
+			{
+				moves.remove(curr);
+			}
+		}
+	}
+	*/
 	public boolean checkForCheckmate()
 	{
 		if(!checkForCheck() || moves.size() == 0) return false; //stalemate or okay

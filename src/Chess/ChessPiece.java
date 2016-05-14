@@ -19,6 +19,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.util.Iterator;
+
+
 public abstract class ChessPiece extends JButton
 {
 	
@@ -43,6 +45,7 @@ public abstract class ChessPiece extends JButton
 	protected String piece_name;
 	protected String piece_loc;
 	
+	public abstract ArrayList<SquareCenter> getAttackedSquares();
 	public void highlightMoves()
 	{
 		for(SquareCenter m : moves)
@@ -54,6 +57,35 @@ public abstract class ChessPiece extends JButton
 		repaint();
 	}
 	
+	
+	public boolean legalMoveSelected(SquareCenter final_loc)
+	{
+		System.out.println("Looking to see if move legal: ");
+		for(SquareCenter loc : moves)
+		{
+			System.out.println(final_loc.toString() + " ... " + loc.toString());
+			boolean isLegal = loc.toString().equalsIgnoreCase(final_loc.toString());
+			if(isLegal) 
+			{
+				System.out.println("Move is legal");
+				return true;
+			}
+		}
+		
+		System.out.println("Move is not legal");
+		return false;
+	}
+
+	public void printAttackedSquares()
+	{
+		System.out.println("Pieces being attacked are: ");
+		for(SquareCenter m:moves)
+		{
+			System.out.println(m.toString());
+			if(m.isAttackedByWhite()){System.out.println("By white");}
+			if(m.isAttackedByBlack()){System.out.println("By black");}
+		}
+	}
 	public void addMove(SquareCenter end)
 	{
 		moves.add(end);
@@ -62,6 +94,7 @@ public abstract class ChessPiece extends JButton
 	{
 		for(SquareCenter m:moves)
 		{
+			//System.out.println(m.toString());
 			m.setAttackedByWhite(tf);
 		}
 	}
@@ -69,6 +102,7 @@ public abstract class ChessPiece extends JButton
 	{
 		for(SquareCenter m:moves)
 		{
+			//System.out.println(m.toString());
 			m.setAttackedByBlack(tf);
 		}
 	}
@@ -76,6 +110,7 @@ public abstract class ChessPiece extends JButton
 	{
 		for(SquareCenter m:moves)
 		{
+			//System.out.println(m.toString());
 			m.setAttackedByWhite(true);
 		}
 	}
@@ -83,11 +118,13 @@ public abstract class ChessPiece extends JButton
 	{
 		for(SquareCenter m:moves)
 		{
+			//System.out.println(m.toString());
 			m.setAttackedByBlack(true);
 		}
 	}
 	
-	public void deselectAttacked()
+	/*
+	 * public void deselectAttacked()
 	{
 		for(SquareCenter m:moves)
 		{
@@ -95,6 +132,7 @@ public abstract class ChessPiece extends JButton
 			m.setAttackedByBlack(false);
 		}
 	}
+	 */
 	public void deselectMoves()
 	{
 		if(!is_selected) return;
@@ -107,7 +145,7 @@ public abstract class ChessPiece extends JButton
 		//repaint();
 		
 	}
-	public abstract void updatePossibleMoves();
+	public abstract ArrayList<SquareCenter> updatePossibleMoves();
 	
 	public void setStringLocation(SquareCenter loc)
 	{
@@ -122,9 +160,11 @@ public abstract class ChessPiece extends JButton
 	{
 		times_moved++;
 	}
+	
 	public boolean move(SquareCenter end)
 	{
 		Iterator<SquareCenter> iter = moves.iterator();
+		
 		while(iter.hasNext())
 		{
 			SquareCenter move = iter.next();
@@ -238,9 +278,8 @@ public abstract class ChessPiece extends JButton
 			{
 				board.setAllUnselected();
 				is_selected = true;
-				updatePossibleMoves();
-				//highlightMoves();
-				//SquareCenter selected = board.getSquareClicked();
+				if(ChessPiece.this instanceof King) ((King) ChessPiece.this).updatePossibleMoves(board.getPiecesWhiteAttacks(), board.getPiecesBlackAttacks(), board);
+				else  updatePossibleMoves();
 				
 				System.out.println(piece_name + " at " + loc.toString() + " selected");
 				repaint();
@@ -258,5 +297,5 @@ public abstract class ChessPiece extends JButton
 			repaint();
 		}
 	}
-	
+
 }

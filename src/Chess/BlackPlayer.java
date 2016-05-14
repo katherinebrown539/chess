@@ -85,4 +85,29 @@ public class BlackPlayer
 			game.addPiece(pawn, pawn_starts[i]);
 		}
 	}
+	
+	/* public void refreshAttacked()
+	{
+		for(BlackPawn p : pawns)
+		{
+			p.setAttackedByBlack(true);
+		}
+		for(BlackRook r : rooks)
+		{
+			r.setAttackedByBlack(true);
+		}
+		for(BlackKnight k : knights)
+		{
+			k.setAttackedByBlack(true);
+		}
+		for(BlackBishop b : bishops)
+		{
+			b.setAttackedByBlack(true);
+		}
+		for(BlackQueen q : queens)
+		{
+			q.setAttackedByBlack(true);
+		}
+		king.setAttackedByBlack(true);
+	} */
 }

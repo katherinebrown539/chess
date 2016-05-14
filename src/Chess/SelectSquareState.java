@@ -11,10 +11,18 @@ public class SelectSquareState implements MoveState
 		if(piece == null) return; //no piece is selected
 		//System.out.println(piece);
 		//get square selected
+		SquareCenter piece_loc = piece.getCenterLocation();
 		SquareCenter square_selected = board.getSquareClicked(x,y);
-		boolean legal = board.legalMoveSelected(x,y);
+		/*if(piece instanceof King)
+		{
+			((King) piece).getLegalMoves(board.getPiecesWhiteAttacks(), board.getPiecesBlackAttacks(), board);
+			piece.highlightMoves();
+			board.repaint();
+		}*/
+		boolean legal =piece.legalMoveSelected(square_selected);// board.legalMoveSelected(x,y);
 		if(square_selected != null)
 		{
+			
 			//see if castle
 			if(piece instanceof King)
 			{
@@ -31,18 +39,65 @@ public class SelectSquareState implements MoveState
 				piece.setSelected(false);
 				piece = to_capture;
 				piece.highlightMoves();
+				//return?
 			}
 			//if to_capture is an ally
 			//set current piece selected to false
 			//set currentpiece to to_capture
 			
+		
+			
+			
 			//highlight moves
 			//move
+			String old_loc = piece.getCenterLocation().getID();
+			board.removeAttacked(piece);
 			boolean res = piece.move(square_selected);
-			System.out.println(res);
+			//System.out.println(res);
+			
 			if(res)
 			{
-				move(to_capture);
+				move(to_capture);	//did pawn move forward two
+				if(piece instanceof Pawn)
+				{
+					
+					String id = piece.getCenterLocation().getID();
+					//System.out.println(old_loc + " " + id);
+					char[] blah = new char[2];
+					blah[0]= old_loc.charAt(0);
+					blah[1] = (piece instanceof WhitePawn)?(char)((int)old_loc.charAt(1)+2):(char)((int)old_loc.charAt(1)-2);
+					String end = new String(blah);
+					//System.out.println(end);
+					if(id.equalsIgnoreCase(end))
+					{
+						//System.out.println("We did it");
+						((Pawn)piece).setTwoForward(true);
+					}
+					else{((Pawn)piece).setTwoForward(false);}
+				}
+				if(piece instanceof Pawn)
+				{
+					//System.out.println("Can enpassant");
+					ChessPiece cp  = ((Pawn) piece).enPassant();
+					if(cp != null)board.removePiece(cp);
+				}
+				if(piece instanceof WhitePawn)
+				{
+					String id = piece.getCenterLocation().getID();
+					if(id.equalsIgnoreCase("A8")||id.equalsIgnoreCase("B8")||id.equalsIgnoreCase("C8")||id.equalsIgnoreCase("D8")||id.equalsIgnoreCase("E8")||id.equalsIgnoreCase("F8")||id.equalsIgnoreCase("G8")||id.equalsIgnoreCase("H8"))
+					{
+						board.pawnPromotion((Pawn)piece);
+					}
+				}
+				if(piece instanceof BlackPawn)
+				{
+					String id = piece.getCenterLocation().getID();
+					if(id.equalsIgnoreCase("A1")||id.equalsIgnoreCase("B1")||id.equalsIgnoreCase("C1")||id.equalsIgnoreCase("D1")||id.equalsIgnoreCase("E1")||id.equalsIgnoreCase("F1")||id.equalsIgnoreCase("G1")||id.equalsIgnoreCase("H1"))
+					{
+						board.pawnPromotion((Pawn)piece);
+					}
+				}
+				
 			}
 			//else{System.out.println(piece + " not moved");}
 		}
@@ -55,7 +110,7 @@ public class SelectSquareState implements MoveState
 			
 	}
 	
-	public void cancel()
+	public void cancel()	
 	{
 		piece.setSelected(false);
 		board.changeState(board.getSelectPieceState());
@@ -65,7 +120,8 @@ public class SelectSquareState implements MoveState
 	
 	public void move(ChessPiece to_capture)
 	{
-		piece.deselectAttacked(); //piece is in new loc so the old squares may/may not be attacked now.
+				//board.refreshAttacked(piece, false);//piece is in new loc so the old squares may/may not be attacked now.
+				
 				//change back to selectPieceState, deselecting piece
 				board.changeState(board.getSelectPieceState());
 				if(to_capture != null)
@@ -79,9 +135,8 @@ public class SelectSquareState implements MoveState
 				board.changeTurns();
 				
 				//set the attacked pieces
-				if(board.blackPieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByBlack(true);
-				if(board.whitePieceOnSquare(piece.getCenterLocation().getX(),piece.getCenterLocation().getY() )) piece.setAttackedByWhite(true);
-				
+				board.addAttacked(piece); // <-write a method to update master list of attacked pieces
+				//board.printAttacked();
 				//if king is attacked
 				//put board in check
 				

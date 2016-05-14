@@ -39,6 +39,12 @@
          <classpath refid="class-path"/>
       </java>
    </target>
+   
+   <target name="robot" depends="build">
+      <java fork="true" failonerror="yes" classname="ChessRobot">
+         <classpath refid="class-path"/>
+      </java>
+   </target>
 
    <target name="test" depends="build">
    <java fork="true" failonerror="yes" classname="Test">
