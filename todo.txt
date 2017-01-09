@@ -1,8 +1,0 @@
-To-Do |
--------
-
-1) Restrict Check through castling
-2) Fix Pawn Promotion
-3) Undo button
-4) List of moves made
-5) DFA for parsing chess notation
