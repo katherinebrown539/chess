@@ -1,3 +1,4 @@
+package Chess;
 import javax.imageio.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,15 +10,15 @@ public class WhiteRook extends Rook
 	{
 
 	//C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg
-		//super(board, square, "C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg");
-		super(board, square, new Color(255,255,255));
+		super(board, square, "resources/pieces/white/rook");
+		//super(board, square, new Color(255,255,255));
 		
 	}
 	public WhiteRook(ChessGame game, int square)
 	{
 		
-		//super(game.getBoard(), square, "C:/Users/thekatiebr/OneDrive/Desktop/Chess/resources/pieces/white/rook.jpeg");
-		super(game.getBoard(), square, new Color(255,255,255));
+		super(game.getBoard(), square, "resources/pieces/white/rook");
+		//super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
 	public ArrayList<SquareCenter> updatePossibleMoves()
@@ -28,7 +29,7 @@ public class WhiteRook extends Rook
 		int new_y = loc.getY();
 		int x = new_x;
 		int y = new_y;
-		System.out.println(loc);
+		//System.out.println(loc);
 		
 		//left horizontal
 		//y stays the same, left decreases
@@ -37,7 +38,7 @@ public class WhiteRook extends Rook
 			while(new_x > 135)
 			{
 				new_x -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				if(new_x <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && ( piece instanceof BlackPawn || piece instanceof BlackQueen /* || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackKing*/);
@@ -78,7 +79,7 @@ public class WhiteRook extends Rook
 		while(new_y > 135)
 			{
 				new_y -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				if(new_y <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && ( piece instanceof BlackPawn || piece instanceof BlackQueen/* || piece instanceof BlackRook || piece instanceof BlackKnight || piece instanceof BlackBishop || piece instanceof BlackKing*/);

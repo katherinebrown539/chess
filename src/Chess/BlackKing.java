@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,11 +7,11 @@ public class BlackKing extends King
 {
 	public BlackKing(ChessBoard board, int square)
 	{
-		super(board, square, new Color(0,0,0));
+		super(board, square, "resources/pieces/black/king");
 	}
 	public BlackKing(ChessGame game, int square)
 	{
-		super(game.getBoard(), square, new Color(0,0,0));
+		super(game.getBoard(), square, "resources/pieces/black/king");
 	}
 	
 	public ArrayList<SquareCenter> updatePossibleMoves(ArrayList<SquareCenter> white, ArrayList<SquareCenter> black, ChessBoard board)
@@ -28,7 +29,7 @@ public class BlackKing extends King
 		int new_y = loc.getY();
 		int x = new_x;
 		int y = new_y;
-		System.out.println(loc);
+		//System.out.println(loc);
 		
 		//left horizontal
 		//y stays the same, left decreases
@@ -36,7 +37,7 @@ public class BlackKing extends King
 			if(new_x  - square_size > 135)
 			{
 				new_x -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				//if(new_x <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));
@@ -76,7 +77,7 @@ public class BlackKing extends King
 		if(new_y - square_size  > 135)
 			{
 				new_y -= square_size;
-				System.out.println(new_x);
+				//System.out.println(new_x);
 				//if(new_y <= 125) break;
 				ChessPiece piece = board.anyPieceOnSquare(new_x, new_y);
 				can_capture = (piece != null) && (board.whitePieceOnSquare(new_x, new_y));

@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.InputEvent;

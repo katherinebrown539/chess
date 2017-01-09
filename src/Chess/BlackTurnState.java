@@ -1,3 +1,4 @@
+package Chess;
 public class BlackTurnState implements TurnState
 {
 	private ChessBoard board;

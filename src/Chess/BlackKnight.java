@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,11 +7,11 @@ public class BlackKnight extends Knight
 {
 	public BlackKnight(ChessBoard board, int square)
 	{
-		super(board, square, new Color(0,0,0));
+		super(board, square, "resources/pieces/black/knight");
 	}
 	public BlackKnight(ChessGame game, int square)
 	{
-		super(game.getBoard(), square, new Color(0,0,0));
+		super(game.getBoard(), square, "resources/pieces/black/knight");
 	}
 	
 }

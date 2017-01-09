@@ -6,7 +6,7 @@
    <property name="jdom-jar" value="/${drive-letter}/Java/jdom-2.0.6/jdom-2.0.6.jar"/>
    <property name="junit-jar" value="/${drive-letter}/Java/junit-4.12/junit-4.12.jar"/>
    <property name="hamcrest-jar" value="/${drive-letter}/Java/junit-4.12/hamcrest-core-1.3.jar"/>
-
+   <property name="doc-directory" value="doc"/>
    <path id="class-path">
       <pathelement location="${build-directory}"/>
       <pathelement location="${jdom-jar}"/>
@@ -35,13 +35,13 @@
    </target>
 
    <target name="run" depends="build">
-      <java fork="true" failonerror="yes" classname="ChessDriver">
+      <java fork="true" failonerror="yes" classname="Chess.ChessDriver">
          <classpath refid="class-path"/>
       </java>
    </target>
    
    <target name="robot" depends="build">
-      <java fork="true" failonerror="yes" classname="ChessRobot">
+      <java fork="true" failonerror="yes" classname="Chess.ChessRobot">
          <classpath refid="class-path"/>
       </java>
    </target>
@@ -53,16 +53,18 @@
 	</target>
 	
 	
-	
-   <delete file="chess.jar"/>
    
-   <jar jarfile="chess.jar" basedir=".">
-	   <manifest>
-		  <attribute name="Main-Class"
-				value="ChessDriver"/>
-		</manifest>
-   </jar>
-	
-   
+  <target name="jar">
+    <jar destfile="chess.jar"
+        basedir="src"
+        includes="**/*.class">
+      <manifest>
+        <attribute name="Main-Class" value="ChessDriver" />
+        </manifest>
+    </jar>
+  </target>
 
+<target name="doc" depends="build" description="generate documentation">
+    <javadoc sourcepath="${source-directory}" destdir="${doc-directory}"/>
+  </target>
 </project>

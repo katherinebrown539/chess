@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -9,7 +10,10 @@ public abstract class Knight extends ChessPiece
 		super(3, 3, 3, 0, null, "N", "Knight", board, square,color);
 	}
 	
-	
+	public Knight(ChessBoard board, int square, String image)
+	{
+		super(5,8,8,0,null,"N", "Knight",board, square, image);
+	}
 	public ArrayList<SquareCenter> updatePossibleMoves()
 	{
 		/* if(this instanceof WhiteKnight) setAttackedByWhite(false);

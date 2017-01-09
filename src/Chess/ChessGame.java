@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class ChessGame extends JFrame
 		initGUI(width, height);		
 		//System.out.println(square);
 		//board.printCenters();
-		repaint();
+		//repaint();
 		
 	}
 	
@@ -51,6 +52,19 @@ public class ChessGame extends JFrame
 	public void alertWhiteWinner()
 	{
 		SimpleDialogs.normalOutput("White Wins!!", "Game Over!!");
+		System.exit(0);
+	}
+	
+	public void alertBlackWinner()
+	{
+		SimpleDialogs.normalOutput("Black Wins!!", "Game Over!!");
+		System.exit(0);
+	}
+	
+	public void alertStalemate()
+	{
+		SimpleDialogs.normalOutput("Stalemate!", "Game Over!!");
+		System.exit(0);
 	}
 	
 	public SquareCenter clickSquare(String id)
@@ -80,14 +94,8 @@ public class ChessGame extends JFrame
 		
 		this.width = width;
 		this.height = height;
-		 try {
-         
-         image = ImageIO.read(new File("chess_background.jpeg"));
-         System.out.println("Success.");
-      } catch (Exception e) {
-         System.out.println("Failed.");
-		 System.out.println(e);
-      } 
+		
+		
 		this.add(board);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(this.width+250, this.height+250);
@@ -95,6 +103,15 @@ public class ChessGame extends JFrame
 		int count = 0;
 	}
 	
+	public BlackKing getBlackKing()
+	{
+		return black.getKing();
+	}
 
-
+	public WhiteKing getWhiteKing()
+	{
+		return white.getKing();
+	}
+	
+	
 }

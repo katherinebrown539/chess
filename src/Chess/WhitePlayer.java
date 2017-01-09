@@ -1,3 +1,4 @@
+package Chess;
 import java.util.ArrayList;
 import java.util.Iterator;
 public class WhitePlayer
@@ -87,28 +88,18 @@ public class WhitePlayer
 		}
 	}
 	
-	/* public void refreshAttacked()
+	public WhiteKing getKing()
 	{
-		for(WhitePawn p : pawns)
-		{
-			p.setAttackedByWhite(true);
-		}
-		for(WhiteRook r : rooks)
-		{
-			r.setAttackedByWhite(true);
-		}
-		for(WhiteKnight k : knights)
-		{
-			k.setAttackedByWhite(true);
-		}
-		for(WhiteBishop b : bishops)
-		{
-			b.setAttackedByWhite(true);
-		}
-		for(WhiteQueen q : queens)
-		{
-			q.setAttackedByWhite(true);
-		}
-		king.setAttackedByWhite(true);
-	} */
+		return king;
+	}
+	
+	public void removeMoves()
+	{
+		
+	}
+	
+	public void addMoves()
+	{
+		
+	}
 }

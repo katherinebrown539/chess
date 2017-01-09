@@ -1,3 +1,4 @@
+package Chess;
 public class SquareCenter
 {
 	private int x;

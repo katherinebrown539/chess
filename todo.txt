@@ -1,4 +1,8 @@
-1) Detect Checkmate/Check/Stalemate
-2) Resrict moves during Check (legal move selected)
+To-Do |
+-------
 
-So, instead of detecting attacked pieces when a piece is moved, detect them FOR ALL THE PIECES before and after each move.
+1) Restrict Check through castling
+2) Fix Pawn Promotion
+3) Undo button
+4) List of moves made
+5) DFA for parsing chess notation

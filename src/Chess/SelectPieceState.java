@@ -1,3 +1,4 @@
+package Chess;
 public class SelectPieceState implements MoveState
 {
 	private ChessBoard board;
@@ -38,6 +39,5 @@ public class SelectPieceState implements MoveState
 		//piece was deselected
 		//System.out.println(selected + "deselected.");
 	}
-	
-	//nothing of importance was selected
+
 }

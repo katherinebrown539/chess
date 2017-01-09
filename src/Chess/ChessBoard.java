@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class ChessBoard extends JPanel implements MouseListener
 	private int high_y;
 	private ArrayList<SquareCenter> highlight_locs;
 	private ArrayList<SquareCenter> deselect_locs;
+	private ArrayList<SquareCenter> white_moves;
+	private ArrayList<SquareCenter> black_moves;
 	private int last_x;
 	private int last_y;
 	private int square_size;
@@ -36,10 +39,15 @@ public class ChessBoard extends JPanel implements MouseListener
 	private SelectPieceState select_piece;
 	private TurnState turn;
 	private WhiteTurnState white;
-	private BlackTurnState black;
+	private BlackTurnState black; 
 	
 	public boolean inCheck(){return in_check;}
-	public void setInCheck(boolean tf){in_check = tf;}
+	public void setInCheck()
+	{
+		boolean white = isWhiteKingAttacked();
+		boolean black = isBlackKingAttacked();
+		in_check = white || black;
+	}
 	public SelectSquareState getSelectSquareState(){return select_square;}
 	public SelectPieceState getSelectPieceState(){return select_piece;}
 	public void changeState(MoveState ms){move = ms;}
@@ -57,13 +65,86 @@ public class ChessBoard extends JPanel implements MouseListener
 	public ArrayList<SquareCenter> getPiecesWhiteAttacks() {return white_attacked;}
 	public ArrayList<SquareCenter> getPiecesBlackAttacks() {return black_attacked;}
 	
+	
+	public boolean isWhiteKingAttacked()
+	{
+		SquareCenter king_loc = cb.getWhiteKing().getCenterLocation();
+		for(SquareCenter curr : black_attacked)
+		{
+			if(curr.getID().equalsIgnoreCase(king_loc.getID()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isBlackKingAttacked()
+	{
+		SquareCenter king_loc = cb.getBlackKing().getCenterLocation();
+		for(SquareCenter curr : white_attacked)
+		{
+			if(curr.getID().equalsIgnoreCase(king_loc.getID()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	
+	public void updateAttackedForAllPieces()
+	{
+		//System.out.println("adding attacked");
+		white_attacked = new ArrayList<SquareCenter>();
+		black_attacked = new ArrayList<SquareCenter>();
+		Iterator<ChessPiece> iter = pieces.iterator();
+		while(iter.hasNext())
+		{
+			ChessPiece curr = iter.next();
+			if(curr.isActive())
+			{
+				addAttacked(curr);
+			}
+		}
+	}
+	
+	public boolean doesWhiteAttackSquare(SquareCenter sc)
+	{
+		for(SquareCenter curr : white_attacked)
+		{
+			if(sc.getID().equalsIgnoreCase(curr.getID()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean doesBlackAttackSquare(SquareCenter sc)
+	{
+		for(SquareCenter curr : black_attacked)
+		{
+			if(sc.getID().equalsIgnoreCase(curr.getID()))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public void removeAttacked(ChessPiece piece)
 	{
 		boolean isBlack = blackPieceOnSquare(piece.getCenterLocation().getX(), piece.getCenterLocation().getY());
 		
 		ArrayList<SquareCenter> attacked = piece.updatePossibleMoves();
 		
-		System.out.println("Refreshing attacked: ");
+		//System.out.println("Refreshing attacked: ");
 		Iterator<SquareCenter> iter = attacked.iterator();
 		
 		
@@ -73,7 +154,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			String id = s.getID();
 			
 			SquareCenter loc = getCenterFromID(id);
-			System.out.println(id + " ==== " + loc.getID());
+			//System.out.println(id + " ==== " + loc.getID());
 			
 			
 			if(isBlack) 
@@ -92,12 +173,13 @@ public class ChessBoard extends JPanel implements MouseListener
 			}
 		}
 	}
+	
 	public void addAttacked(ChessPiece piece)
 	{
 		boolean isBlack = blackPieceOnSquare(piece.getCenterLocation().getX(), piece.getCenterLocation().getY());
 		ArrayList<SquareCenter> attacked = piece.updatePossibleMoves();
 		
-		System.out.println("Refreshing attacked: ");
+		//System.out.println("Refreshing attacked: ");
 		Iterator<SquareCenter> iter = attacked.iterator();
 		
 		
@@ -107,7 +189,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			String id = s.getID();
 			
 			SquareCenter loc = getCenterFromID(id);
-			System.out.println(id + " ==== " + loc.getID());
+			//System.out.println(id + " ==== " + loc.getID());
 			
 			
 			if(isBlack) 
@@ -154,7 +236,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		while(value == null)
 		{
 			value= (ChessPiece)JOptionPane.showInputDialog(this,"What do you wish to promote your pawn to?", "Pawn Promotion!", JOptionPane.QUESTION_MESSAGE,  null, options, options[0]);
-			System.out.println(value);
+			//System.out.println(value);
 		}
 		
 		SquareCenter loc = p.getCenterLocation();
@@ -207,30 +289,6 @@ public class ChessBoard extends JPanel implements MouseListener
 		return false;
 	}
 	
-	public void printCenters()
-	{
-		for(SquareCenter sc : centers)
-		{
-			System.out.println(sc.getX() + " , " + sc.getY());
-		}
-	}
-	
-	public void printAttacked()
-	{
-		
-		
-		System.out.println("Whtie attacks: ");
-		for(SquareCenter sc:white_attacked)
-		{
-			System.out.println(sc.toString());
-		}
-		
-		System.out.println("Black attacks: ");
-		for(SquareCenter sc:black_attacked)
-		{
-			System.out.println(sc.toString());
-		}
-	}
 	public void addPiece(ChessPiece cp, String id)
 	{
 		this.setLayout(null);
@@ -249,8 +307,15 @@ public class ChessBoard extends JPanel implements MouseListener
 		cp.setBounds(c.getX()-square_size/2 , c.getY()-square_size/2, square_size, square_size);
 		cp.setOpaque(false);
 		this.add(cp);
+		
 	}
 	
+	public void updatePiecePrediction(ChessPiece cp, SquareCenter c)
+	{
+		pieces.remove(cp);
+		pieces.add(cp);
+		updateAttackedForAllPieces();
+	}
 	public void removePiece(ChessPiece cp)
 	{
 		pieces.remove(cp);
@@ -285,6 +350,8 @@ public class ChessBoard extends JPanel implements MouseListener
 		in_check = false;
 		white_attacked = new ArrayList<SquareCenter>();
 		black_attacked = new ArrayList<SquareCenter>();
+		white_moves = new ArrayList<SquareCenter>();
+		black_moves = new ArrayList<SquareCenter>();
 		select_piece = new SelectPieceState(this);
 		select_square = new SelectSquareState(this);
 		white = new WhiteTurnState(this);
@@ -295,7 +362,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		int start_x = Math.abs(height-width)/2 - 10;
 		int start_y = Math.abs(height-width)/2 - 10;
 		square_size = board_size/8;
-		System.out.println(square_size);
+		//System.out.println(square_size);
 		pieces = new ArrayList<ChessPiece>();
 		String[] letters = {"A","B","C","D","E","F","G","H"};
 		
@@ -328,6 +395,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		}
 	}
 	public ArrayList<SquareCenter> getCenters(){ return centers; }
+	/*
 	public void printSelectedCenters()
 	{
 		for(SquareCenter c: centers)
@@ -335,7 +403,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			if(c.isSelected()) System.out.println(c);
 		}
 		System.out.println("---------------");
-	}
+	}*/	
 	
 	public void paintSelectedCenters(Graphics g)
 	{
@@ -387,7 +455,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		//where was the mouse clicked?
 		int x = e.getX(); 
 		int y = e.getY();
-		System.out.println(x+","+y);
+		//System.out.println(x+","+y);
 
 		//go through each center, and if it's center is in between a square's boundaries and not a button, fill it out
 		Iterator<SquareCenter> iter = centers.iterator();
@@ -403,7 +471,7 @@ public class ChessBoard extends JPanel implements MouseListener
 			
 			if(square_x_start <=  x && x <= square_x_end && square_y_start <=  y && y <= square_y_end)
 			{
-				System.out.println(center);
+				//System.out.println(center);
 				if(center.isSelected()) {center.setSelected(false);}
 				else center.setSelected(true);			
 			}	
@@ -429,6 +497,7 @@ public class ChessBoard extends JPanel implements MouseListener
 		Iterator<SquareCenter> iter = centers.iterator();
 		while(iter.hasNext())
 		{
+			//
 			SquareCenter center = iter.next();
 			int square_x_start = center.getX() - (square_size/2) ;
 			int square_x_end  = center.getX() + (square_size/2);
@@ -461,7 +530,10 @@ public class ChessBoard extends JPanel implements MouseListener
 		int col = 1;
 		for(int j = 0; j < centers.size(); j++)
 		{
+			
 			SquareCenter loc = centers.get(j);
+			ChessPiece piece = anyPieceOnSquare(loc.getX(), loc.getY());
+			if(piece != null) piece.setBackgroundColor(curr);
 			g.setColor(curr);
 			g.fillRect(loc.getX() - square_size/2, loc.getY() -square_size/2, square_size, square_size);
 			g.setColor(highlight);
@@ -572,5 +644,68 @@ public class ChessBoard extends JPanel implements MouseListener
 	public void mousePressed(MouseEvent e){};
 	public void mouseReleased(MouseEvent e){};
 	
+	public void alertPlayer()
+	{
+		boolean checkmate = false;// in_check && (white_moves.isEmpty() || black_moves.isEmpty());
+		boolean stalemate = false; //(white_moves.isEmpty() || black_moves.isEmpty());
+		boolean white = false;
+		boolean black = false;
+		if(checkmate)
+		{
+			white = white_moves.isEmpty();
+			if(white) cb.alertWhiteWinner();
+			else cb.alertBlackWinner();
+		}
+		else if(stalemate)
+		{
+			cb.alertStalemate();
+		}
+		else if(in_check)
+		{
+			white = isWhiteKingAttacked();
+			if(white) SimpleDialogs.normalOutput("White King is in CHECK!", "CHECK!");
+			else SimpleDialogs.normalOutput("Black King is in CHECK!", "Check!");
+		}
+		
+	}
 	
+	public void addWhiteMoves(ArrayList<SquareCenter> moves)
+	{
+		Iterator<SquareCenter> iter = moves.iterator();
+		
+		while(iter.hasNext())
+		{
+			white_moves.add(iter.next());
+		}	
+	}
+	
+	public void addBlackMoves(ArrayList<SquareCenter> moves)
+	{
+		Iterator<SquareCenter> iter = moves.iterator();
+		
+		while(iter.hasNext())
+		{
+			black_moves.add(iter.next());
+		}	
+	}
+	
+	public void removeWhiteMoves(ArrayList<SquareCenter> moves)
+	{
+		Iterator<SquareCenter> iter = moves.iterator();
+		
+		while(iter.hasNext())
+		{
+			white_moves.remove(iter.next());
+		}	
+	}
+	
+	public void removeBlackMoves(ArrayList<SquareCenter> moves)
+	{
+		Iterator<SquareCenter> iter = moves.iterator();
+		
+		while(iter.hasNext())
+		{
+			black_moves.remove(iter.next());
+		}	
+	}
 }

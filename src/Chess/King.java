@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -10,6 +11,12 @@ public abstract class King extends ChessPiece
 	public King(ChessBoard board, int square, Color color)
 	{
 		super(0, 1, 1, 1, null, "K", "King", board, square,color);
+		can_castle = true;
+	}
+	
+	public King(ChessBoard board, int square, String image)
+	{
+		super(0, 1, 1, 1, null, "K", "King", board, square,image);
 		can_castle = true;
 	}
 	
@@ -39,10 +46,10 @@ public abstract class King extends ChessPiece
 		while(iter.hasNext())
 		{
 			SquareCenter curr = board.getCenterFromID(iter.next().getID());
-			System.out.println("Looking at " + curr.toString());
+			//System.out.println("Looking at " + curr.toString());
 			if(containsMove(moves, curr))
 			{
-				System.out.println("Cannot move to " + curr.toString());
+				//System.out.println("Cannot move to " + curr.toString());
 				removeMove(moves, curr);
 			}
 		}
@@ -188,8 +195,8 @@ public abstract class King extends ChessPiece
 			{
 				SquareCenter r = board.getCenterFromID("H1");
 				ChessPiece rook = board.anyPieceOnSquare(r.getX(), r.getY());
-				if(rook instanceof WhiteRook) System.out.println("White");
-				if(rook instanceof BlackRook) System.out.println("Black");
+				//if(rook instanceof WhiteRook) System.out.println("White");
+				//if(rook instanceof BlackRook) System.out.println("Black");
 				r = board.getCenterFromID("F1");
 				this.move(g1);
 				rook.move(r);

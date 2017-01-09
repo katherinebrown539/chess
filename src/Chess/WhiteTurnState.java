@@ -1,3 +1,4 @@
+package Chess;
 public class WhiteTurnState implements TurnState
 {
 	private ChessBoard board;

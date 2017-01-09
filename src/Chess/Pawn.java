@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,6 +13,11 @@ public abstract class Pawn extends ChessPiece
 	public Pawn(ChessBoard board, int square, Color color)
 	{
 		super(1,1,0,1, null, "P", "Pawn", board, square,color);
+	}
+	
+	public Pawn(ChessBoard board, int square, String image)
+	{
+		super(1,1,0,1, null, "P", "Pawn", board, square,image);
 	}
 	
 	public abstract ArrayList<SquareCenter> updatePossibleMoves();
@@ -31,11 +37,11 @@ public abstract class Pawn extends ChessPiece
 		String[] black =  {"A3","B3", "C3","D3","E3","F3","G3","H3"};
 		String[] whereabouts = (this instanceof WhitePawn)? white:black;
 		String loc = this.loc.getID();
-		System.out.println("Currently: "+loc);
+		//System.out.println("Currently: "+loc);
 		String curr = "";
 		for(String s:whereabouts)
 		{
-			System.out.println(s);
+			//System.out.println(s);
 			if(s.equalsIgnoreCase(loc) && can_en_passant)
 			{
 				curr = s;
@@ -44,13 +50,13 @@ public abstract class Pawn extends ChessPiece
 			
 		}
 		if(curr == "") return null;
-		System.out.println("I am here");
+		//System.out.println("I am here");
 		char[] blah = new char[2];
 		blah[0] = loc.charAt(0);
 		blah[1] = loc.charAt(1);
 		blah[1] = (this instanceof WhitePawn)? (char)((int)blah[1]-1):(char)((int)blah[1]+1);
 		String end = new String(blah);
-		System.out.println("Capturing piece: " + end);
+		//System.out.println("Capturing piece: " + end);
 		SquareCenter c = board.getCenterFromID(end);
 		ChessPiece piece = board.anyPieceOnSquare(c.getX(), c.getY());
 		if((piece instanceof BlackPawn && this instanceof WhitePawn) || (piece instanceof WhitePawn && this instanceof BlackPawn))

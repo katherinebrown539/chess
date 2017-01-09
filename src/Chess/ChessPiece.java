@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -22,8 +23,7 @@ import java.util.Iterator;
 
 
 public abstract class ChessPiece extends JButton
-{
-	
+{	
 	protected int score; //piece's value when captured
 	protected int x_mov; //how many spaces on x axis piece can move
 	protected int y_mov; //how many spaces on y axis piece can move
@@ -39,11 +39,19 @@ public abstract class ChessPiece extends JButton
 	protected Font font = new Font("Impact", Font.BOLD, 72);
 	protected Color highlight = new Color(0, 102, 204);
 	protected Color piece_color;
+	protected Color background_color;
 	protected ChessBoard board;
-	protected ImageIcon image;
+	//protected ImageIcon image;
 	protected String piece_id;
 	protected String piece_name;
 	protected String piece_loc;
+	protected Image image;
+	protected ImageIcon icon;
+	public boolean isWhitePiece()
+	{ return piece_color == Color.WHITE || piece_color == Color.white;}
+	
+	public boolean isBlackPiece()
+	{ return piece_color == Color.BLACK || piece_color == Color.black;}
 	
 	public abstract ArrayList<SquareCenter> getAttackedSquares();
 	public void highlightMoves()
@@ -52,40 +60,59 @@ public abstract class ChessPiece extends JButton
 		{
 			m.setID(board.getIDFromLocation(m));
 			board.highlightSquare(m.getX(), m.getY());
+			//if(this instanceof Whit)
 		}
 		
 		repaint();
 	}
 	
+
+	
+	public boolean doesMovePutWhiteKingInCheck(SquareCenter loc)
+	{
+		SquareCenter current_loc = this.loc;
+		//make temporary move change
+		this.loc = loc;
+		board.updateAttackedForAllPieces();
+		boolean king_is_attacked = board.isWhiteKingAttacked();
+		System.out.println(king_is_attacked);
+		//reset original location
+		this.loc = current_loc;
+		board.updateAttackedForAllPieces();
+		return king_is_attacked;
+		
+	}
+	
+	public boolean doesMovePutBlackKingInCheck(SquareCenter loc)
+	{
+		SquareCenter current_loc = this.loc;
+		//make temporary move change
+		this.loc = loc;
+		board.updateAttackedForAllPieces();
+		boolean king_is_attacked = board.isBlackKingAttacked();
+		System.out.println(king_is_attacked);
+		//reset original location
+		this.loc = current_loc;
+		board.updateAttackedForAllPieces();
+		return king_is_attacked;
+		
+	}
 	
 	public boolean legalMoveSelected(SquareCenter final_loc)
 	{
-		System.out.println("Looking to see if move legal: ");
 		for(SquareCenter loc : moves)
 		{
-			System.out.println(final_loc.toString() + " ... " + loc.toString());
+			
 			boolean isLegal = loc.toString().equalsIgnoreCase(final_loc.toString());
 			if(isLegal) 
 			{
-				System.out.println("Move is legal");
 				return true;
 			}
 		}
 		
-		System.out.println("Move is not legal");
 		return false;
 	}
 
-	public void printAttackedSquares()
-	{
-		System.out.println("Pieces being attacked are: ");
-		for(SquareCenter m:moves)
-		{
-			System.out.println(m.toString());
-			if(m.isAttackedByWhite()){System.out.println("By white");}
-			if(m.isAttackedByBlack()){System.out.println("By black");}
-		}
-	}
 	public void addMove(SquareCenter end)
 	{
 		moves.add(end);
@@ -196,13 +223,24 @@ public abstract class ChessPiece extends JButton
 	public ChessPiece(int scroe, int x, int y, int diag, SquareCenter loc, String id, String name, ChessBoard board, int size, String img)
 	{
 		//this.piece_color = pieceColor;
-		super(new ImageIcon(img));
-		System.out.println(img);
-		try
+		String file_extension = ".png";
+		
+		ImageLoader il = ImageLoader.getImageLoader();
+		//System.out.println(img+file_extension);
+		Image image = il.getImage(img+file_extension);
+		if(image != null)
 		{
-			this.setIcon(new ImageIcon(this.getClass().getResource(img)));
+			image= image.getScaledInstance( 100, 100,  java.awt.Image.SCALE_SMOOTH ) ;  
+			icon = new ImageIcon( image );
+			
+			//super.setIcon(icon);
 		}
-		catch(Exception e){System.out.println(e);e.printStackTrace();}
+		if(image == null)
+		{
+			System.out.println("Failure. . .");
+			System.exit(1);
+		}
+		
 		this.square_size = size;
 		this.board = board;
 		this.score = score;
@@ -220,6 +258,7 @@ public abstract class ChessPiece extends JButton
 		
 		//updatePossibleMoves();
 		this.addActionListener(new PieceListener());
+		
 		//System.out.println(name);
 	}
 	public ChessPiece(int score, int x, int y, int diag, SquareCenter loc, String id, String name, ChessBoard board, int size, Color pieceColor)
@@ -255,16 +294,25 @@ public abstract class ChessPiece extends JButton
 	}
 	public void setLocation(SquareCenter loc){this.loc = loc;}
 	
+	public void setBackgroundColor(Color c)
+	{
+		background_color = c;
+	}
+	
 	public void draw(Graphics g)
 	{
-		if(!in_play) return; //don't draw a captured piece
 		
-		if(is_selected)g.setColor(highlight);
-		else g.setColor(piece_color);
+		g.setColor(background_color);
+		g.fillRect(loc.getX() - square_size/2, loc.getY()-square_size/2, square_size, square_size);
+		icon.paintIcon(this, g, loc.getX()  - square_size/2 + 5,  loc.getY() - square_size/2 + 5);
+		super.setIcon(icon);
 		
-		g.setFont(font);
-		g.drawString(piece_id, loc.getX() - 20, loc.getY() + 20);
-		//super.setIcon(image);
+	}
+	
+	
+	public boolean isActive()
+	{
+		return in_play;
 	}
 	
 	public String toString(){return piece_name + " at " + piece_loc;}
@@ -276,6 +324,7 @@ public abstract class ChessPiece extends JButton
 			moves = new ArrayList<SquareCenter>();
 			if(!is_selected)
 			{
+				
 				board.setAllUnselected();
 				is_selected = true;
 				if(ChessPiece.this instanceof King) ((King) ChessPiece.this).updatePossibleMoves(board.getPiecesWhiteAttacks(), board.getPiecesBlackAttacks(), board);

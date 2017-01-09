@@ -1,3 +1,4 @@
+package Chess;
 public class SelectSquareState implements MoveState
 {
 	private ChessBoard board;
@@ -13,16 +14,50 @@ public class SelectSquareState implements MoveState
 		//get square selected
 		SquareCenter piece_loc = piece.getCenterLocation();
 		SquareCenter square_selected = board.getSquareClicked(x,y);
-		/*if(piece instanceof King)
-		{
-			((King) piece).getLegalMoves(board.getPiecesWhiteAttacks(), board.getPiecesBlackAttacks(), board);
-			piece.highlightMoves();
-			board.repaint();
-		}*/
+		
+		
+		
 		boolean legal =piece.legalMoveSelected(square_selected);// board.legalMoveSelected(x,y);
+		
 		if(square_selected != null)
 		{
 			
+			if(piece instanceof BlackKing)
+			{
+				if(board.doesWhiteAttackSquare(square_selected))
+				{
+					cancel();
+					return;
+				}
+			}
+			if(piece instanceof BlackRook || piece instanceof BlackPawn || piece instanceof BlackBishop || piece instanceof BlackKnight || piece instanceof BlackQueen)
+			{
+				System.out.println("It's a black piece");
+				if(doesMovePutBlackKingInCheck(square_selected))
+				{
+					cancel(); return;
+				}
+			}
+			
+			if(piece instanceof WhiteKing)
+			{
+				if(board.doesBlackAttackSquare(square_selected))
+				{
+					
+					cancel();
+					return;
+				}
+			}
+			
+			if(piece instanceof WhiteRook || piece instanceof WhitePawn || piece instanceof WhiteBishop || piece instanceof WhiteKnight || piece instanceof WhiteQueen)
+			{
+				System.out.println("It's a white piece");
+				if(doesMovePutWhiteKingInCheck(square_selected))
+				{
+					
+					cancel(); return;
+				}
+			}
 			//see if castle
 			if(piece instanceof King)
 			{
@@ -44,14 +79,13 @@ public class SelectSquareState implements MoveState
 			//if to_capture is an ally
 			//set current piece selected to false
 			//set currentpiece to to_capture
-			
-		
-			
-			
+
 			//highlight moves
 			//move
 			String old_loc = piece.getCenterLocation().getID();
-			board.removeAttacked(piece);
+			//todo remove
+			//board.removeAttacked(piece);
+			board.updateAttackedForAllPieces();
 			boolean res = piece.move(square_selected);
 			//System.out.println(res);
 			
@@ -97,7 +131,9 @@ public class SelectSquareState implements MoveState
 						board.pawnPromotion((Pawn)piece);
 					}
 				}
-				
+				board.updateAttackedForAllPieces(); //just... curious
+				board.setInCheck();
+				board.alertPlayer();
 			}
 			//else{System.out.println(piece + " not moved");}
 		}
@@ -120,26 +156,49 @@ public class SelectSquareState implements MoveState
 	
 	public void move(ChessPiece to_capture)
 	{
-				//board.refreshAttacked(piece, false);//piece is in new loc so the old squares may/may not be attacked now.
-				
-				//change back to selectPieceState, deselecting piece
-				board.changeState(board.getSelectPieceState());
-				if(to_capture != null)
-				{
-					//do stuff to capture piece
-					to_capture.isCaptured();
-					board.removePiece(to_capture);
-				}
-				piece.incrementMoveCount();
-				piece.setSelected(false);
-				board.changeTurns();
-				
-				//set the attacked pieces
-				board.addAttacked(piece); // <-write a method to update master list of attacked pieces
-				//board.printAttacked();
-				//if king is attacked
-				//put board in check
-				
-				//System.out.println(piece + "moved");
+		
+		//change back to selectPieceState, deselecting piece
+		
+		board.changeState(board.getSelectPieceState());
+		if(to_capture != null)
+		{
+			//do stuff to capture piece
+			to_capture.isCaptured();
+			board.removePiece(to_capture);
+		}
+		piece.incrementMoveCount();
+		piece.setSelected(false);
+		board.changeTurns();
+		
+		//set the attacked pieces
+		board.updateAttackedForAllPieces();//board.addAttacked(piece); // <-write a method to update master list of attacked pieces
+		//board.cullIllegalMoves();
+		
+		//if king is attacked
+		//put board in check
+		
+		//System.out.println(piece + "moved");
+	}
+	
+	public boolean doesMovePutWhiteKingInCheck(SquareCenter loc)
+	{
+		if(piece.doesMovePutWhiteKingInCheck(loc))
+		{
+			SimpleDialogs.normalOutput("This move puts White King in check!", "HEY! Listen");
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean doesMovePutBlackKingInCheck(SquareCenter loc)
+	{
+		if(piece.doesMovePutBlackKingInCheck(loc))
+		{
+			SimpleDialogs.normalOutput("This move puts Black King in check!", "HEY! Listen");
+			return true;
+		}
+		
+		return false;
 	}
 }

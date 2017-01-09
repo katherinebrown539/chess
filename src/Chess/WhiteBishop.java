@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,11 +7,13 @@ public class WhiteBishop extends Bishop
 {
 	public WhiteBishop(ChessBoard board, int square)
 	{
-		super(board, square, new Color(255,255,255));
+		super(board, square, "resources/pieces/white/bishop");
+		//super(board, square, new Color(255,255,255));
 	}
 	public WhiteBishop(ChessGame game, int square)
 	{
-		super(game.getBoard(), square, new Color(255,255,255));
+		super(game.getBoard(), square, "resources/pieces/white/bishop");
+		//super(game.getBoard(), square, new Color(255,255,255));
 	}
 	
 	public ArrayList<SquareCenter> updatePossibleMoves()
@@ -22,7 +25,7 @@ public class WhiteBishop extends Bishop
 		int new_y = loc.getY();
 		int x = new_x;
 		int y = new_y;
-		System.out.println(loc);
+		//System.out.println(loc);
 		
 		
 		new_x = x;

@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,12 +7,12 @@ public class BlackPawn extends Pawn
 {
 	public BlackPawn(ChessBoard board, int square)
 	{
-		super(board, square, new Color(0,0,0));
+		super(board, square,"resources/pieces/black/pawn");
 		
 	}
 	public BlackPawn(ChessGame game, int square)
 	{
-		super(game.getBoard(), square, new Color(0,0,0));
+		super(game.getBoard(), square, "resources/pieces/black/pawn");
 
 	}
 	

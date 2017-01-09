@@ -1,3 +1,4 @@
+package Chess;
 public interface TurnState
 {
 	public boolean legalPieceSelected(int x, int y);

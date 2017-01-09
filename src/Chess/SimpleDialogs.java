@@ -1,3 +1,4 @@
+package Chess;
 import javax.swing.*;
 import java.awt.*;
 

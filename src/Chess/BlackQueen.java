@@ -1,3 +1,4 @@
+package Chess;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,11 +7,12 @@ public class BlackQueen extends Queen
 {
 	public BlackQueen(ChessBoard board, int square)
 	{
-		super(board, square, new Color(0,0,0));
+		//super(board, square, new Color(0,0,0));
+		super(board, square, "resources/pieces/black/queen");
 	}
 	public BlackQueen(ChessGame game, int square)
 	{
-		super(game.getBoard(), square, new Color(0,0,0));
+		super(game.getBoard(), square, "resources/pieces/black/queen");
 	}
 	
 	public  ArrayList<SquareCenter> updatePossibleMoves()
@@ -21,7 +23,7 @@ public class BlackQueen extends Queen
 		int new_y = loc.getY();
 		int x = new_x;
 		int y = new_y;
-		System.out.println(loc);
+		//System.out.println(loc);
 		
 		//left horizontal
 		//y stays the same, left decreases
